@@ -8,7 +8,7 @@ public class Pizarra extends JPanel {
 
     public Pizarra() {
         // Establecer un tamaño preferido para la pizarra
-        setPreferredSize(new Dimension(800, 800));
+        setPreferredSize(new Dimension(1000, 1000));
 
 
         setLayout(null);
@@ -22,9 +22,9 @@ public class Pizarra extends JPanel {
 
         //botones
         JButton botonCrearTorneo = new JButton("Crear Torneo");
-        JButton botonModificarTorneo = new JButton("Modificar Torneo");
-        JButton botonEquipos = new JButton("Equipos");
-        JButton botonInformacion = new JButton("Información");
+        JButton botonModificarTorneo = new JButton("Actualizar Torneo");
+        JButton botonEquipos = new JButton("Gestionar Equipos");
+        JButton botonInformacion = new JButton("Ver Información");
 
 
 
