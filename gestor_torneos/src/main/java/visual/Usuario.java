@@ -15,19 +15,16 @@ public class Usuario extends JPanel {
 
 
         // Crear botones
-        JButton botonCrearAdmin = new JButton("Crear Admin");
         JButton botonCrearUsuario = new JButton("Crear Usuario");
         JButton botonIngresarAdmin = new JButton("Ingresar Admin");
         JButton botonIngresarUsuario = new JButton("Ingresar Usuario");
 
         // Establecer posiciones y tamaños de los botones
-        botonCrearAdmin.setBounds(25, 100, 150, 30*2);
         botonCrearUsuario.setBounds(25, 150+50, 150, 30*2);
         botonIngresarAdmin.setBounds(25, 200+100, 150, 30);
         botonIngresarUsuario.setBounds(25, 250+100, 150, 30);
 
         // Añadir botones al panel
-        add(botonCrearAdmin);
         add(botonCrearUsuario);
         add(botonIngresarAdmin);
         add(botonIngresarUsuario);
