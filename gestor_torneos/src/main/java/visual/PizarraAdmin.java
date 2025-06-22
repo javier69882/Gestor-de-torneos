@@ -3,10 +3,10 @@ package visual;
 import javax.swing.*;
 import java.awt.*;
 
-public class Pizarra extends JPanel {
+public class PizarraAdmin extends JPanel {
     private Image fondo;
 
-    public Pizarra() {
+    public PizarraAdmin() {
         // Establecer un tamaño preferido para la pizarra
         setPreferredSize(new Dimension(1000, 1000));
 

@@ -1,33 +1,40 @@
 package visual;
 
-
 import javax.swing.*;
 import java.awt.*;
 
 public class Usuario extends JPanel {
+    private JButton botonIngresarAdmin;
+    private JButton botonIngresarUsuario;
+    private JButton botonCerrarSesion;
 
-    public Usuario(){
-        setPreferredSize(new Dimension(200, 1000));
-
-
+    public Usuario() {
         setLayout(null);
+        setOpaque(true);
+        setBackground(new Color(40, 40, 40, 200));
+        setBorder(BorderFactory.createLineBorder(Color.BLACK, 2, true));
+        setBounds(20, 20, 180, 150);
 
+        botonIngresarAdmin = new JButton("Admin");
+        botonIngresarUsuario = new JButton("Usuario");
+        botonCerrarSesion = new JButton("Inicio");
 
+        botonIngresarAdmin.setBounds(15, 15, 150, 30);
+        botonIngresarUsuario.setBounds(15, 60, 150, 30);
+        botonCerrarSesion.setBounds(15, 105, 150, 30);
 
-        // Crear botones
-        JButton botonCrearUsuario = new JButton("Crear Usuario");
-        JButton botonIngresarAdmin = new JButton("Ingresar Admin");
-        JButton botonIngresarUsuario = new JButton("Ingresar Usuario");
-
-        // Establecer posiciones y tamaños de los botones
-        botonCrearUsuario.setBounds(25, 150+50, 150, 30*2);
-        botonIngresarAdmin.setBounds(25, 200+100, 150, 30);
-        botonIngresarUsuario.setBounds(25, 250+100, 150, 30);
-
-        // Añadir botones al panel
-        add(botonCrearUsuario);
         add(botonIngresarAdmin);
         add(botonIngresarUsuario);
+        add(botonCerrarSesion);
     }
 
+    public JButton getBotonIngresarAdmin() {
+        return botonIngresarAdmin;
+    }
+    public JButton getBotonIngresarUsuario() {
+        return botonIngresarUsuario;
+    }
+    public JButton getBotonCerrarSesion() {
+        return botonCerrarSesion;
+    }
 }
