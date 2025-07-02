@@ -18,9 +18,7 @@ public class Participantes extends Persona {
         return equipo;
     }
     public void setEquipo(Equipos equipo) {
-        if (equipo == null) {
-            throw new ValorNullException("El equipo no puede ser null.");
-        }
+
         this.equipo = equipo;
     }
 }
