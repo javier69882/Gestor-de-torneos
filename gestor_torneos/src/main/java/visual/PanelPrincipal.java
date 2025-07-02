@@ -6,29 +6,22 @@ import java.awt.*;
 public class PanelPrincipal extends JPanel {
     private String estadoUsuario; // null, "admin", "usuario"
     private Usuario panelUsuario;
-    private JPanel panelCentral; // Cambia entre bienvenida/admin/usuario
+    private JPanel panelCentral;
 
     public PanelPrincipal() {
         setLayout(null);
         setBackground(Color.BLACK);
-
         estadoUsuario = null;
 
-        // Panel usuario flotante
         panelUsuario = new Usuario();
         add(panelUsuario);
-
-        // Panel central
-
 
         panelCentral = new Bienvenida();
         panelCentral.setBounds(0, 0, 1200, 1000);
         add(panelCentral);
 
-        // Listeners de los botones de ingreso
         panelUsuario.getBotonIngresarAdmin().addActionListener(e -> mostrarAdmin());
         panelUsuario.getBotonIngresarUsuario().addActionListener(e -> mostrarUsuario());
-        // Listener para cerrar sesión
         panelUsuario.getBotonCerrarSesion().addActionListener(e -> volverABienvenida());
     }
 
@@ -38,7 +31,10 @@ public class PanelPrincipal extends JPanel {
         panelCentral = new PizarraAdmin();
         panelCentral.setBounds(0, 0, 1200, 1000);
         add(panelCentral);
-        setComponentZOrder(panelUsuario, 0); // Que quede encima
+        setComponentZOrder(panelUsuario, 0);
+
+        ((PizarraAdmin) panelCentral).getBotonEquipos().addActionListener(e -> mostrarEquipos());
+
         repaint();
         revalidate();
     }
@@ -49,7 +45,10 @@ public class PanelPrincipal extends JPanel {
         panelCentral = new TabletUsuario();
         panelCentral.setBounds(0, 0, 1200, 1000);
         add(panelCentral);
-        setComponentZOrder(panelUsuario, 0); // Que quede encima
+        setComponentZOrder(panelUsuario, 0);
+
+        ((TabletUsuario) panelCentral).getBotonVerEquipos().addActionListener(e -> mostrarEquipos());
+
         repaint();
         revalidate();
     }
@@ -58,6 +57,16 @@ public class PanelPrincipal extends JPanel {
         estadoUsuario = null;
         remove(panelCentral);
         panelCentral = new Bienvenida();
+        panelCentral.setBounds(0, 0, 1200, 1000);
+        add(panelCentral);
+        setComponentZOrder(panelUsuario, 0);
+        repaint();
+        revalidate();
+    }
+
+    private void mostrarEquipos() {
+        remove(panelCentral);
+        panelCentral = new Equipo();
         panelCentral.setBounds(0, 0, 1200, 1000);
         add(panelCentral);
         setComponentZOrder(panelUsuario, 0);
