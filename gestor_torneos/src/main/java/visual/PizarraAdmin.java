@@ -1,7 +1,10 @@
 package visual;
 
+import Logico.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PizarraAdmin extends JPanel {
     private Image fondo;
@@ -32,10 +35,7 @@ public class PizarraAdmin extends JPanel {
         add(botonEquipos);
         add(botonInformacion);
 
-        // Listener para abrir un nuevo JFrame al crear torneo
         botonCrearTorneo.addActionListener(e -> abrirVentanaCrearTorneo());
-
-        // Listener para abrir un nuevo JFrame al acceder torneo
         botonAccederTorneo.addActionListener(e -> abrirVentanaAccederTorneo());
     }
 
@@ -45,21 +45,119 @@ public class PizarraAdmin extends JPanel {
 
     private void abrirVentanaCrearTorneo() {
         JFrame ventana = new JFrame("Crear Nuevo Torneo");
-        ventana.setSize(500, 400);
+        ventana.setSize(600, 650);
         ventana.setLocationRelativeTo(null);
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
         JPanel panel = new JPanel(null);
         panel.setBackground(new Color(220, 220, 250));
 
-        JLabel etiqueta = new JLabel("Aquí puedes crear un torneo nuevo");
-        etiqueta.setFont(new Font("Arial", Font.BOLD, 16));
-        etiqueta.setBounds(100, 30, 300, 30);
-        panel.add(etiqueta);
+        JLabel lblNombre = new JLabel("Nombre del torneo:");
+        JTextField txtNombre = new JTextField();
+        lblNombre.setBounds(30, 20, 140, 25);
+        txtNombre.setBounds(180, 20, 350, 25);
+
+        JLabel lblTipo = new JLabel("Tipo de torneo:");
+        String[] tipos = {"Físico", "Videojuego"};
+        JComboBox<String> comboTipo = new JComboBox<>(tipos);
+        lblTipo.setBounds(30, 60, 140, 25);
+        comboTipo.setBounds(180, 60, 200, 25);
+
+        JLabel lblDeporteVideojuego = new JLabel("Deporte:");
+        JTextField txtDeporteVideojuego = new JTextField();
+        lblDeporteVideojuego.setBounds(30, 100, 140, 25);
+        txtDeporteVideojuego.setBounds(180, 100, 200, 25);
+
+        JLabel lblModalidad = new JLabel("Modalidad:");
+        JComboBox<Modalidad> comboModalidad = new JComboBox<>(Modalidad.values());
+        lblModalidad.setBounds(30, 140, 140, 25);
+        comboModalidad.setBounds(180, 140, 200, 25);
+
+        JLabel lblCantidadEquipos = new JLabel("Cantidad de equipos:");
+        JComboBox<CantidadEquipos> comboCantidadEquipos = new JComboBox<>(CantidadEquipos.values());
+        lblCantidadEquipos.setBounds(30, 180, 140, 25);
+        comboCantidadEquipos.setBounds(180, 180, 200, 25);
+
+        JLabel lblEquipos = new JLabel("Equipos participantes:");
+        lblEquipos.setBounds(30, 220, 180, 25);
+
+        // Checkboxes para equipos
+        JPanel panelChecks = new JPanel();
+        panelChecks.setLayout(new GridLayout(0, 1));
+        JScrollPane scrollChecks = new JScrollPane(panelChecks);
+        scrollChecks.setBounds(30, 250, 500, 220);
+
+        List<Equipos> equiposDisponibles = Equipo.getEquiposCreados();
+        ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+        for (Equipos eq : equiposDisponibles) {
+            JCheckBox cb = new JCheckBox(eq.getNombre());
+            cb.setFont(new Font("Arial", Font.PLAIN, 16));
+            panelChecks.add(cb);
+            checkBoxes.add(cb);
+        }
+
+        JButton btnCrear = new JButton("Crear Torneo");
+        btnCrear.setBounds(230, 500, 140, 35);
+
+
+        comboTipo.addActionListener(e -> {
+            if (comboTipo.getSelectedIndex() == 0) {
+                lblDeporteVideojuego.setText("Deporte:");
+            } else {
+                lblDeporteVideojuego.setText("Videojuego:");
+            }
+        });
+
+        panel.add(lblNombre); panel.add(txtNombre);
+        panel.add(lblTipo); panel.add(comboTipo);
+        panel.add(lblDeporteVideojuego); panel.add(txtDeporteVideojuego);
+        panel.add(lblModalidad); panel.add(comboModalidad);
+        panel.add(lblCantidadEquipos); panel.add(comboCantidadEquipos);
+        panel.add(lblEquipos); panel.add(scrollChecks);
+        panel.add(btnCrear);
 
         ventana.add(panel);
         ventana.setVisible(true);
+
+        btnCrear.addActionListener(e -> {
+            String nombre = txtNombre.getText().trim();
+            String deporteVideojuego = txtDeporteVideojuego.getText().trim();
+            Modalidad modalidad = (Modalidad) comboModalidad.getSelectedItem();
+            CantidadEquipos cantidad = (CantidadEquipos) comboCantidadEquipos.getSelectedItem();
+
+            // Contar seleccionados
+            List<Equipos> equiposSeleccionados = new ArrayList<>();
+            for (int i = 0; i < checkBoxes.size(); i++) {
+                if (checkBoxes.get(i).isSelected()) {
+                    equiposSeleccionados.add(equiposDisponibles.get(i));
+                }
+            }
+
+            int cantidadEsperada = 0;
+            if (cantidad == CantidadEquipos.CUATRO) cantidadEsperada = 4;
+            else if (cantidad == CantidadEquipos.OCHO) cantidadEsperada = 8;
+            else if (cantidad == CantidadEquipos.DIESEIS) cantidadEsperada = 16;
+
+            if (nombre.isEmpty() || deporteVideojuego.isEmpty()) {
+                JOptionPane.showMessageDialog(ventana, "Completa todos los campos.");
+                return;
+            }
+            if (equiposSeleccionados.size() != cantidadEsperada) {
+                JOptionPane.showMessageDialog(ventana, "Debes seleccionar exactamente " + cantidadEsperada + " equipos.");
+                return;
+            }
+
+            if (comboTipo.getSelectedIndex() == 0) {
+                TorneoFisico torneo = new TorneoFisico(nombre, equiposSeleccionados, modalidad, cantidad, deporteVideojuego);
+                PanelPrincipal.depositoTorneos.addElemento(torneo);
+            } else {
+                TorneoVideojuegos torneo = new TorneoVideojuegos(nombre, equiposSeleccionados, modalidad, cantidad, deporteVideojuego);
+                PanelPrincipal.depositoTorneos.addElemento(torneo);
+            }
+            JOptionPane.showMessageDialog(ventana, "¡Torneo creado exitosamente!");
+            ventana.dispose();
+        });
     }
+
 
     private void abrirVentanaAccederTorneo() {
         JFrame ventana = new JFrame("Acceder a Torneo");

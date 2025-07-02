@@ -1,5 +1,8 @@
 package Logico;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
         // Crear equipos
@@ -29,9 +32,26 @@ public class Main {
         depositoEquipos.addElemento(equipo1);
         depositoEquipos.addElemento(equipo2);
 
-        // Crear torneo físico y añadir equipos
-        TorneoFisico torneo = new TorneoFisico("Copa Invierno", "Fútbol");
-        torneo.setEquipos(depositoEquipos.getElementos());
+        // Crear lista de equipos a usar en torneos
+        List<Equipos> equiposParaTorneo = new ArrayList<>(depositoEquipos.getElementos());
+
+        // Crear torneo físico y añadir equipos, modalidad y cantidad equipos
+        TorneoFisico torneoFisico = new TorneoFisico(
+                "Copa Invierno",
+                equiposParaTorneo,
+                Modalidad.ELIMINACIONDIRECTA,
+                CantidadEquipos.CUATRO,
+                "Fútbol"
+        );
+
+        // Crear torneo videojuegos
+        TorneoVideojuegos torneoVideojuegos = new TorneoVideojuegos(
+                "eSports Master",
+                equiposParaTorneo,
+                Modalidad.LIGASIMPLE,
+                CantidadEquipos.OCHO,
+                "Rocket League"
+        );
 
         // Imprimir información de participantes
         System.out.println("Participantes:");
@@ -48,12 +68,25 @@ public class Main {
             }
         }
 
-        // Imprimir información del torneo
-        System.out.println("\nTorneo:");
-        System.out.println("- Nombre: " + torneo.getNombre());
-        System.out.println("- Deporte: " + torneo.getDeporte());
+        // Imprimir información del torneo físico
+        System.out.println("\nTorneo Físico:");
+        System.out.println("- Nombre: " + torneoFisico.getNombre());
+        System.out.println("- Deporte: " + torneoFisico.getDeporte());
+        System.out.println("- Modalidad: " + torneoFisico.getModalidad());
+        System.out.println("- Cantidad de equipos: " + torneoFisico.getCantidadEquipos());
         System.out.println("- Equipos participantes:");
-        for (Equipos eq : torneo.getEquipos()) {
+        for (Equipos eq : torneoFisico.getEquipos()) {
+            System.out.println("  * " + eq.getNombre());
+        }
+
+        // Imprimir información del torneo de videojuegos
+        System.out.println("\nTorneo Videojuegos:");
+        System.out.println("- Nombre: " + torneoVideojuegos.getNombre());
+        System.out.println("- Videojuego: " + torneoVideojuegos.getVideojuego());
+        System.out.println("- Modalidad: " + torneoVideojuegos.getModalidad());
+        System.out.println("- Cantidad de equipos: " + torneoVideojuegos.getCantidadEquipos());
+        System.out.println("- Equipos participantes:");
+        for (Equipos eq : torneoVideojuegos.getEquipos()){
             System.out.println("  * " + eq.getNombre());
         }
     }

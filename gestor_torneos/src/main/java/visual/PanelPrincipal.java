@@ -1,9 +1,12 @@
 package visual;
 
+import Logico.*;
 import javax.swing.*;
 import java.awt.*;
 
 public class PanelPrincipal extends JPanel {
+    public static Deposito<Torneo> depositoTorneos = new Deposito<>();
+
     private String estadoUsuario; // null, "admin", "usuario"
     private Usuario panelUsuario;
     private JPanel panelCentral;

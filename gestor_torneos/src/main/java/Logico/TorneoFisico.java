@@ -1,18 +1,15 @@
 package Logico;
 
-public class TorneoFisico extends Torneo{
+import java.util.List;
+
+public class TorneoFisico extends Torneo {
     private String deporte;
 
-    public TorneoFisico(String nombre, String deporte) {
-        super(nombre, null); // Inicializa la lista de equipos como null
+    public TorneoFisico(String nombre, List<Equipos> equipos, Modalidad modalidad, CantidadEquipos cantidadEquipos, String deporte) {
+        super(nombre, equipos, modalidad, cantidadEquipos);
         this.deporte = deporte;
     }
 
-    public String getDeporte() {
-        return deporte;
-    }
-
-    public void setDeporte(String Deporte) {
-        this.deporte = deporte;
-    }
+    public String getDeporte() { return deporte; }
+    public void setDeporte(String deporte) { this.deporte = deporte; }
 }
