@@ -1,17 +1,60 @@
 package Logico;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Crear equipos
+        Equipos equipo1 = new Equipos("Águilas");
+        Equipos equipo2 = new Equipos("Lobos");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        // Crear participantes y asignarlos a equipos
+        Participantes p1 = new Participantes("García", "Ana", "ana.garcia@email.com", equipo1);
+        Participantes p2 = new Participantes("Pérez", "Luis", "luis.perez@email.com", equipo1);
+        Participantes p3 = new Participantes("Santos", "María", "maria.santos@email.com", equipo1);
+
+        Participantes p4 = new Participantes("Ramírez", "Carlos", "carlos.ramirez@email.com", equipo2);
+        Participantes p5 = new Participantes("López", "Sofía", "sofia.lopez@email.com", equipo2);
+        Participantes p6 = new Participantes("Fernández", "Pedro", "pedro.fernandez@email.com", equipo2);
+
+        // Depósito de participantes
+        Deposito<Participantes> depositoParticipantes = new Deposito<>();
+        depositoParticipantes.addElemento(p1);
+        depositoParticipantes.addElemento(p2);
+        depositoParticipantes.addElemento(p3);
+        depositoParticipantes.addElemento(p4);
+        depositoParticipantes.addElemento(p5);
+        depositoParticipantes.addElemento(p6);
+
+        // Depósito de equipos
+        Deposito<Equipos> depositoEquipos = new Deposito<>();
+        depositoEquipos.addElemento(equipo1);
+        depositoEquipos.addElemento(equipo2);
+
+        // Crear torneo físico y añadir equipos
+        TorneoFisico torneo = new TorneoFisico("Copa Invierno", "Fútbol");
+        torneo.setEquipos(depositoEquipos.getElementos());
+
+        // Imprimir información de participantes
+        System.out.println("Participantes:");
+        for (Participantes p : depositoParticipantes.getElementos()) {
+            System.out.println("- " + p.getNombre() + " " + p.getApellidos() + ", Correo: " + p.getCorreo() + ", Equipo: " + p.getEquipo().getNombre());
+        }
+
+        // Imprimir información de equipos y sus participantes
+        System.out.println("\nEquipos:");
+        for (Equipos eq : depositoEquipos.getElementos()) {
+            System.out.println("- " + eq.getNombre());
+            for (Participantes part : eq.getPaticipante()) {
+                System.out.println("  * " + part.getNombre() + " " + part.getApellidos());
+            }
+        }
+
+        // Imprimir información del torneo
+        System.out.println("\nTorneo:");
+        System.out.println("- Nombre: " + torneo.getNombre());
+        System.out.println("- Deporte: " + torneo.getDeporte());
+        System.out.println("- Equipos participantes:");
+        for (Equipos eq : torneo.getEquipos()) {
+            System.out.println("  * " + eq.getNombre());
         }
     }
 }
