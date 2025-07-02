@@ -161,17 +161,61 @@ public class PizarraAdmin extends JPanel {
 
     private void abrirVentanaAccederTorneo() {
         JFrame ventana = new JFrame("Acceder a Torneo");
-        ventana.setSize(500, 400);
+        ventana.setSize(600, 400);
         ventana.setLocationRelativeTo(null);
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JPanel panel = new JPanel(null);
         panel.setBackground(new Color(230, 255, 230));
 
-        JLabel etiqueta = new JLabel("Aquí puedes acceder a un torneo existente");
-        etiqueta.setFont(new Font("Arial", Font.BOLD, 16));
-        etiqueta.setBounds(70, 30, 400, 30);
-        panel.add(etiqueta);
+        JLabel lbl = new JLabel("Selecciona un torneo:");
+        lbl.setFont(new Font("Arial", Font.BOLD, 18));
+        lbl.setBounds(40, 25, 300, 30);
+        panel.add(lbl);
+
+        DefaultListModel<String> modelo = new DefaultListModel<>();
+        java.util.List<Torneo> torneos = PanelPrincipal.depositoTorneos.getElementos();
+        for (Torneo t : torneos) {
+            modelo.addElement(t.getNombre());
+        }
+        JList<String> listaTorneos = new JList<>(modelo);
+        listaTorneos.setFont(new Font("Arial", Font.PLAIN, 16));
+        JScrollPane scroll = new JScrollPane(listaTorneos);
+        scroll.setBounds(40, 70, 500, 200);
+        panel.add(scroll);
+
+        JButton btnVer = new JButton("Ver Detalles");
+        btnVer.setBounds(220, 290, 150, 35);
+        panel.add(btnVer);
+
+        JTextArea detalles = new JTextArea();
+        detalles.setEditable(false);
+        detalles.setFont(new Font("Monospaced", Font.PLAIN, 13));
+        detalles.setBounds(40, 340, 500, 80);
+        panel.add(detalles);
+
+        btnVer.addActionListener(e -> {
+            int idx = listaTorneos.getSelectedIndex();
+            if (idx < 0) {
+                JOptionPane.showMessageDialog(ventana, "Selecciona un torneo.");
+                return;
+            }
+            Torneo seleccionado = torneos.get(idx);
+            StringBuilder info = new StringBuilder();
+            info.append("Nombre: ").append(seleccionado.getNombre()).append("\n");
+            info.append("Modalidad: ").append(seleccionado.getModalidad()).append("\n");
+            info.append("Cantidad equipos: ").append(seleccionado.getCantidadEquipos()).append("\n");
+            if (seleccionado instanceof TorneoFisico) {
+                info.append("Tipo: FÃsico\nDeporte: ").append(((TorneoFisico) seleccionado).getDeporte()).append("\n");
+            } else if (seleccionado instanceof TorneoVideojuegos) {
+                info.append("Tipo: Videojuego\nVideojuego: ").append(((TorneoVideojuegos) seleccionado).getVideojuego()).append("\n");
+            }
+            info.append("Equipos:\n");
+            for (Equipos eq : seleccionado.getEquipos()) {
+                info.append("  - ").append(eq.getNombre()).append("\n");
+            }
+            detalles.setText(info.toString());
+        });
 
         ventana.add(panel);
         ventana.setVisible(true);
