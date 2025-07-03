@@ -10,9 +10,15 @@ public class TorneoVideojuegos extends TorneoBase {
         this.videojuego = videojuego;
     }
 
-    public String getVideojuego() { return videojuego; }
-    public void setVideojuego(String videojuego) { this.videojuego = videojuego; }
+    public String getVideojuego() {
+        return videojuego;
+    }
+    public void setVideojuego(String videojuego) {
+        this.videojuego = videojuego;
+    }
 
     @Override
-    public String getTipoTorneo() { return "Videojuego"; }
+    public String getTipoTorneo() {
+        return "Videojuego";
+    }
 }

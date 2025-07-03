@@ -10,9 +10,15 @@ public class TorneoFisico extends TorneoBase {
         this.deporte = deporte;
     }
 
-    public String getDeporte() { return deporte; }
-    public void setDeporte(String deporte) { this.deporte = deporte; }
+    public String getDeporte() {
+        return deporte;
+    }
+    public void setDeporte(String deporte) {
+        this.deporte = deporte;
+    }
 
     @Override
-    public String getTipoTorneo() { return "Físico"; }
+    public String getTipoTorneo() {
+        return "Físico";
+    }
 }

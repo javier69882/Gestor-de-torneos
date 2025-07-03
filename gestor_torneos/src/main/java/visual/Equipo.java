@@ -269,10 +269,22 @@ public class Equipo extends JPanel {
     }
 
     //GETTERS
-    public static List<Participantes> getParticipantesCreados() { return participantesCreados; }
-    public static List<Equipos> getEquiposCreados() { return equiposCreados; }
-    public JButton getBotonCrearEquipo() { return botonCrearEquipo; }
-    public JButton getBotonBorrarEquipo() { return botonBorrarEquipo; }
-    public JButton getBotonCrearParticipante() { return botonCrearParticipante; }
-    public JButton getBotonVerEquiposParticipantes() { return botonVerEquiposParticipantes; }
+    public static List<Participantes> getParticipantesCreados() {
+        return participantesCreados;
+    }
+    public static List<Equipos> getEquiposCreados() {
+        return equiposCreados;
+    }
+    public JButton getBotonCrearEquipo() {
+        return botonCrearEquipo;
+    }
+    public JButton getBotonBorrarEquipo() {
+        return botonBorrarEquipo;
+    }
+    public JButton getBotonCrearParticipante() {
+        return botonCrearParticipante;
+    }
+    public JButton getBotonVerEquiposParticipantes() {
+        return botonVerEquiposParticipantes;
+    }
 }

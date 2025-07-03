@@ -14,14 +14,22 @@ public abstract class TorneoDecorator implements ITorneo {
     }
 
     @Override
-    public String getNombre() { return torneoDecorado.getNombre(); }
+    public String getNombre() {
+        return torneoDecorado.getNombre();
+    }
 
     @Override
-    public List<Equipos> getEquipos() { return torneoDecorado.getEquipos(); }
+    public List<Equipos> getEquipos() {
+        return torneoDecorado.getEquipos();
+    }
 
     @Override
-    public CantidadEquipos getCantidadEquipos() { return torneoDecorado.getCantidadEquipos(); }
+    public CantidadEquipos getCantidadEquipos() {
+        return torneoDecorado.getCantidadEquipos();
+    }
 
     @Override
-    public String getTipoTorneo() { return torneoDecorado.getTipoTorneo(); }
+    public String getTipoTorneo() {
+        return torneoDecorado.getTipoTorneo();
+    }
 }

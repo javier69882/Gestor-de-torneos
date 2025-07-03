@@ -51,7 +51,7 @@ public class Main {
                 CantidadEquipos.OCHO,
                 "Rocket League"
         );
-        ITorneo torneoVideojuegos = new LigaSimpleDecorator(torneoVideojuegosBase);
+        ITorneo torneoVideojuegos = new LigaSimple(torneoVideojuegosBase);
 
         // Imprimir información de participantes
         System.out.println("Participantes:");

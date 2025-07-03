@@ -43,7 +43,7 @@ public class Main {
                 CantidadEquipos.CUATRO,
                 "Fútbol"
         );
-        ITorneo torneoConModalidad = new EliminacionDirectaDecorator(torneoBase);
+        ITorneo torneoConModalidad = new LigaSimple(torneoBase);
 
         // Agregar al depósito global de torneos
         PanelPrincipal.depositoTorneos.addElemento(torneoConModalidad);

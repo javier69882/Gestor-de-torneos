@@ -9,4 +9,9 @@ public interface ITorneo {
     String getTipoTorneo(); // "Físico" o "Videojuego"
     String getModalidad();  // Nombre modalidad decorada
     void jugarTorneo();     // comportamiento
+
+
+    List<Partido> getPartidos();
+    void registrarResultado(Partido partido, int puntajeA, int puntajeB);
+    List<PosicionLiga> getTablaPosiciones();
 }

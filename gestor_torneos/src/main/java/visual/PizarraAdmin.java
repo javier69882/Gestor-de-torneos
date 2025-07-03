@@ -145,7 +145,7 @@ public class PizarraAdmin extends JPanel {
                 return;
             }
 
-            //Cambios Decorator aquí
+            // Cambios Decorator aquí
             ITorneo torneoBase;
             if (comboTipo.getSelectedIndex() == 0) {
                 torneoBase = new TorneoFisico(nombre, equiposSeleccionados, cantidad, deporteVideojuego);
@@ -162,7 +162,7 @@ public class PizarraAdmin extends JPanel {
                     torneoDecorado = new DobleEliminacionDecorator(torneoBase);
                     break;
                 case LIGASIMPLE:
-                    torneoDecorado = new LigaSimpleDecorator(torneoBase);
+                    torneoDecorado = new LigaSimple(torneoBase);
                     break;
                 default:
                     torneoDecorado = torneoBase;
@@ -175,7 +175,7 @@ public class PizarraAdmin extends JPanel {
     }
 
     private void abrirVentanaAccederTorneo() {
-        //referencia al PanelPrincipal
+        // Referencia al PanelPrincipal
         Container parent = this.getParent();
         while (parent != null && !(parent instanceof PanelPrincipal)) {
             parent = parent.getParent();
@@ -223,9 +223,15 @@ public class PizarraAdmin extends JPanel {
             ITorneo seleccionado = torneos.get(idx);
             ventana.dispose();
 
-            //cambiar el panel principal
+            // Cambia el panel central según la modalidad
             panelPrincipal.remove(panelPrincipal.panelCentral);
-            panelPrincipal.panelCentral = new TorneoActualAdmin(seleccionado);
+
+            if ("LIGA_SIMPLE".equalsIgnoreCase(seleccionado.getModalidad())) {
+                panelPrincipal.panelCentral = new TorneoLigaSimpleAdmin(seleccionado);
+            } else {
+                panelPrincipal.panelCentral = new TorneoActualAdmin(seleccionado);
+            }
+
             panelPrincipal.panelCentral.setBounds(0, 0, 1200, 1000);
             panelPrincipal.add(panelPrincipal.panelCentral);
             panelPrincipal.setComponentZOrder(panelPrincipal.panelUsuario, 0);
@@ -236,7 +242,6 @@ public class PizarraAdmin extends JPanel {
         ventana.add(panel);
         ventana.setVisible(true);
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
