@@ -5,89 +5,84 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Crear equipos
+        // Crear 4 equipos
         Equipos equipo1 = new Equipos("Águilas");
         Equipos equipo2 = new Equipos("Lobos");
+        Equipos equipo3 = new Equipos("Tiburones");
+        Equipos equipo4 = new Equipos("Leones");
 
-        // Crear participantes y asignarlos a equipos
-        Participantes p1 = new Participantes("García", "Ana", "ana.garcia@email.com", equipo1);
-        Participantes p2 = new Participantes("Pérez", "Luis", "luis.perez@email.com", equipo1);
-        Participantes p3 = new Participantes("Santos", "María", "maria.santos@email.com", equipo1);
+        // Crear lista de equipos
+        List<Equipos> equiposParaTorneo = new ArrayList<>();
+        equiposParaTorneo.add(equipo1);
+        equiposParaTorneo.add(equipo2);
+        equiposParaTorneo.add(equipo3);
+        equiposParaTorneo.add(equipo4);
 
-        Participantes p4 = new Participantes("Ramírez", "Carlos", "carlos.ramirez@email.com", equipo2);
-        Participantes p5 = new Participantes("López", "Sofía", "sofia.lopez@email.com", equipo2);
-        Participantes p6 = new Participantes("Fernández", "Pedro", "pedro.fernandez@email.com", equipo2);
-
-        // Depósito de participantes
-        Deposito<Participantes> depositoParticipantes = new Deposito<>();
-        depositoParticipantes.addElemento(p1);
-        depositoParticipantes.addElemento(p2);
-        depositoParticipantes.addElemento(p3);
-        depositoParticipantes.addElemento(p4);
-        depositoParticipantes.addElemento(p5);
-        depositoParticipantes.addElemento(p6);
-
-        // Depósito de equipos
-        Deposito<Equipos> depositoEquipos = new Deposito<>();
-        depositoEquipos.addElemento(equipo1);
-        depositoEquipos.addElemento(equipo2);
-
-        // Crear lista de equipos a usar en torneos
-        List<Equipos> equiposParaTorneo = new ArrayList<>(depositoEquipos.getElementos());
-
-        // Crear torneo físico usando Decorator
-        ITorneo torneoFisicoBase = new TorneoFisico(
-                "Copa Invierno",
+        //Crear torneo base y decorar con Doble Eliminación Ida y Vuelta
+        ITorneo torneoBase = new TorneoFisico(
+                "Copa Doble Eliminación Ida y Vuelta",
                 equiposParaTorneo,
                 CantidadEquipos.CUATRO,
                 "Fútbol"
         );
-        ITorneo torneoFisico = new EliminacionDirectaDecorator(torneoFisicoBase);
+        DobleEliminacionDecorator torneo = new DobleEliminacionDecorator(torneoBase);
 
-        // Crear torneo de videojuegos usando Decorator
-        ITorneo torneoVideojuegosBase = new TorneoVideojuegos(
-                "eSports Master",
-                equiposParaTorneo,
-                CantidadEquipos.OCHO,
-                "Rocket League"
-        );
-        ITorneo torneoVideojuegos = new LigaSimple(torneoVideojuegosBase);
-
-        // Imprimir información de participantes
-        System.out.println("Participantes:");
-        for (Participantes p : depositoParticipantes.getElementos()) {
-            System.out.println("- " + p.getNombre() + " " + p.getApellidos() + ", Correo: " + p.getCorreo() + ", Equipo: " + p.getEquipo().getNombre());
+        // Semifinales
+        System.out.println("==== Semifinales (Ida y Vuelta) ====");
+        List<Partido> ronda1 = torneo.getPartidosRondaActual();
+        for (Partido p : ronda1) {
+            System.out.println(
+                    p.getNombreEquipoASeguro() + " vs " +
+                            p.getNombreEquipoBSeguro() +
+                            " (jugado: " + p.isJugado() + ") [" + p.getMarcadorSeguro() + "]"
+            );
         }
 
-        // Imprimir información de equipos y sus participantes
-        System.out.println("\nEquipos:");
-        for (Equipos eq : depositoEquipos.getElementos()) {
-            System.out.println("- " + eq.getNombre());
-            for (Participantes part : eq.getPaticipante()) {
-                System.out.println("  * " + part.getNombre() + " " + part.getApellidos());
-            }
+        // Registrar resultados de ida
+        torneo.registrarResultado(ronda1.get(0), 2, 1); // Águilas vs Lobos (ida)
+        torneo.registrarResultado(ronda1.get(1), 3, 0); // Tiburones vs Leones (ida)
+        // Registrar resultados de vuelta
+        torneo.registrarResultado(ronda1.get(2), 0, 1); // Lobos vs Águilas (vuelta)
+        torneo.registrarResultado(ronda1.get(3), 2, 2); // Leones vs Tiburones (vuelta)
+
+        // Verificar partidos después de registrar resultados
+        System.out.println("\n=== Partidos Semifinales después de registrar resultados ===");
+        for (Partido p : ronda1) {
+            System.out.println(
+                    p.getNombreEquipoASeguro() + " vs " +
+                            p.getNombreEquipoBSeguro() +
+                            " (jugado: " + p.isJugado() + ") [" + p.getMarcadorSeguro() + "]"
+            );
         }
 
-        // Imprimir información del torneo físico
-        System.out.println("\nTorneo Físico:");
-        System.out.println("- Nombre: " + torneoFisico.getNombre());
-        System.out.println("- Deporte: " + ((TorneoFisico) torneoFisicoBase).getDeporte());
-        System.out.println("- Modalidad: " + torneoFisico.getModalidad());
-        System.out.println("- Cantidad de equipos: " + torneoFisico.getCantidadEquipos());
-        System.out.println("- Equipos participantes:");
-        for (Equipos eq : torneoFisico.getEquipos()) {
-            System.out.println("  * " + eq.getNombre());
+        //Final
+        System.out.println("\n==== Final (Ida y Vuelta) ====");
+        List<Partido> ronda2 = torneo.getPartidosRondaActual();
+        for (Partido p : ronda2) {
+            System.out.println(
+                    p.getNombreEquipoASeguro() + " vs " +
+                            p.getNombreEquipoBSeguro() +
+                            " (jugado: " + p.isJugado() + ") [" + p.getMarcadorSeguro() + "]"
+            );
         }
 
-        // Imprimir información del torneo de videojuegos
-        System.out.println("\nTorneo Videojuegos:");
-        System.out.println("- Nombre: " + torneoVideojuegos.getNombre());
-        System.out.println("- Videojuego: " + ((TorneoVideojuegos) torneoVideojuegosBase).getVideojuego());
-        System.out.println("- Modalidad: " + torneoVideojuegos.getModalidad());
-        System.out.println("- Cantidad de equipos: " + torneoVideojuegos.getCantidadEquipos());
-        System.out.println("- Equipos participantes:");
-        for (Equipos eq : torneoVideojuegos.getEquipos()){
-            System.out.println("  * " + eq.getNombre());
+        // Registrar resultados de la final
+        torneo.registrarResultado(ronda2.get(0), 1, 2); // Tiburones vs Águilas (ida)
+        torneo.registrarResultado(ronda2.get(1), 1, 1); // Águilas vs Tiburones (vuelta)
+
+        // Verificar partidos de la final después de registrar resultados
+        System.out.println("\n=== Partidos Final después de registrar resultados ===");
+        for (Partido p : ronda2) {
+            System.out.println(
+                    p.getNombreEquipoASeguro() + " vs " +
+                            p.getNombreEquipoBSeguro() +
+                            " (jugado: " + p.isJugado() + ") [" + p.getMarcadorSeguro() + "]"
+            );
         }
+
+        //Mostrar campeón
+        Equipos campeon = torneo.getCampeon();
+        System.out.println("\n==== ¡Torneo finalizado! ====");
+        System.out.println("El campeón es: " + (campeon != null ? campeon.getNombre() : "Sin definir"));
     }
 }

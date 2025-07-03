@@ -38,9 +38,48 @@ public class Partido {
         this.jugado = jugado;
     }
 
+    public String getNombreEquipoASeguro() {
+        if (equipoA != null) {
+            return equipoA.getNombre();
+        } else {
+            return "Pendiente";
+        }
+    }
+
+    public String getNombreEquipoBSeguro() {
+        if (equipoB != null) {
+            return equipoB.getNombre();
+        } else {
+            return "Pendiente";
+        }
+    }
+
+    public String getMarcadorSeguro() {
+        if (puntajeA != null && puntajeB != null) {
+            return puntajeA + " - " + puntajeB;
+        } else {
+            return "-";
+        }
+    }
+
     @Override
     public String toString() {
-        return equipoA.getNombre() + " vs " + equipoB.getNombre() +
-                (jugado ? (" ["+puntajeA+"-"+puntajeB+"]") : "");
+        String nombreA, nombreB, marcador;
+        if (equipoA != null) {
+            nombreA = equipoA.getNombre();
+        } else {
+            nombreA = "Pendiente";
+        }
+        if (equipoB != null) {
+            nombreB = equipoB.getNombre();
+        } else {
+            nombreB = "Pendiente";
+        }
+        if (puntajeA != null && puntajeB != null) {
+            marcador = " [" + puntajeA + " - " + puntajeB + "]";
+        } else {
+            marcador = "";
+        }
+        return nombreA + " vs " + nombreB + marcador;
     }
 }
