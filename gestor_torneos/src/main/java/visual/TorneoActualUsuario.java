@@ -21,7 +21,7 @@ public class TorneoActualUsuario extends JPanel {
         lblTitulo.setBounds(350, 20, 700, 40);
         add(lblTitulo);
 
-        //Info básica del torneo
+        // Info básica del torneo
         JTextArea area = new JTextArea();
         area.setEditable(false);
         area.setFont(new Font("Monospaced", Font.PLAIN, 16));
@@ -51,11 +51,16 @@ public class TorneoActualUsuario extends JPanel {
         scrollInfo.setBounds(350, 70, 500, 100);
         add(scrollInfo);
 
-        //Tabla de posiciones
-        tablaPosiciones = new JTable(getDatosTabla(), new String[]{"Equipo", "PTS", "J", "GF", "GC"});
-        JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
-        scrollTabla.setBounds(350, 190, 500, 300);
-        add(scrollTabla);
+        // Solo agregar la tabla si es LIGA_SIMPLE
+        if (torneo.getModalidad() == "LIGA_SIMPLE") {
+            tablaPosiciones = new JTable(
+                    getDatosTabla(),
+                    new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"}
+            );
+            JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
+            scrollTabla.setBounds(350, 190, 500, 300);
+            add(scrollTabla);
+        }
 
         // Botón Volver
         JButton btnVolver = new JButton("Volver");

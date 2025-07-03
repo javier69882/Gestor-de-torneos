@@ -43,7 +43,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         JPanel panelDerecho = new JPanel(new BorderLayout());
 
         //Tabla de posiciones con scroll
-        tablaPosiciones = new JTable(getDatosTabla(), new String[]{"Equipo", "PTS", "J", "GF", "GC"});
+        tablaPosiciones = new JTable(getDatosTabla(), new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"});
         JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
         panelDerecho.add(scrollTabla, BorderLayout.CENTER);
 
@@ -133,7 +133,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         for (Partido p : torneo.getPartidos()) modeloPartidos.addElement(p);
 
         tablaPosiciones.setModel(new DefaultTableModel(getDatosTabla(),
-                new String[]{"Equipo", "PTS", "J", "GF", "GC"}));
+                new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLE FAVOR", "GOLES CONTRA"}));
         repaint();
     }
 }
