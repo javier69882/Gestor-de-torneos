@@ -5,8 +5,8 @@ import java.util.List;
 
 public class DobleEliminacionDecorator extends TorneoDecorator {
 
-    private final List<List<Partido>> rondasIda;
-    private final List<List<Partido>> rondasVuelta;
+    public final List<List<Partido>> rondasIda;
+    public final List<List<Partido>> rondasVuelta;
     private int rondaActual;
     private Equipos campeon;
 

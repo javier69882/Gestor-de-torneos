@@ -223,11 +223,13 @@ public class PizarraAdmin extends JPanel {
             ITorneo seleccionado = torneos.get(idx);
             ventana.dispose();
 
-            // Cambia el panel central segÃºn la modalidad/decorador
+            // Cambia el panel central según el tipo/modalidad
             panelPrincipal.remove(panelPrincipal.panelCentral);
 
             if (seleccionado instanceof EliminacionDirectaDecorator) {
-                panelPrincipal.panelCentral = new TorneoEliminacionDirectaAdmin((EliminacionDirectaDecorator)seleccionado);
+                panelPrincipal.panelCentral = new TorneoEliminacionDirectaAdmin((EliminacionDirectaDecorator) seleccionado);
+            } else if (seleccionado instanceof DobleEliminacionDecorator) {
+                panelPrincipal.panelCentral = new TorneoDobleEliminacionAdmin((DobleEliminacionDecorator) seleccionado);
             } else if ("LIGA_SIMPLE".equalsIgnoreCase(seleccionado.getModalidad())) {
                 panelPrincipal.panelCentral = new TorneoLigaSimpleAdmin(seleccionado);
             } else {
@@ -244,6 +246,9 @@ public class PizarraAdmin extends JPanel {
         ventana.add(panel);
         ventana.setVisible(true);
     }
+
+
+
 
     @Override
     protected void paintComponent(Graphics g) {

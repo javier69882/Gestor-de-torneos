@@ -79,10 +79,13 @@ public class TabletUsuario extends JPanel {
             ITorneo seleccionado = torneos.get(idx);
             ventana.dispose();
 
-            // Cambia el panel central en PanelPrincipal
+            // Cambia el panel central en PanelPrincipal según modalidad
             panelPrincipal.remove(panelPrincipal.panelCentral);
+
             if (seleccionado instanceof EliminacionDirectaDecorator) {
                 panelPrincipal.panelCentral = new TorneoEliminacionDirectaUsuario((EliminacionDirectaDecorator)seleccionado);
+            } else if (seleccionado instanceof DobleEliminacionDecorator) {
+                panelPrincipal.panelCentral = new TorneoDobleEliminacionUsuario((DobleEliminacionDecorator)seleccionado);
             } else {
                 panelPrincipal.panelCentral = new TorneoActualUsuario(seleccionado);
             }
@@ -96,9 +99,6 @@ public class TabletUsuario extends JPanel {
         ventana.add(panel);
         ventana.setVisible(true);
     }
-
-
-
 
     public JButton getBotonVerEquipos() {
         return botonVerEquipos;
