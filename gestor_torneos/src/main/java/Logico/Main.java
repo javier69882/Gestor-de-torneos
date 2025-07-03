@@ -35,23 +35,23 @@ public class Main {
         // Crear lista de equipos a usar en torneos
         List<Equipos> equiposParaTorneo = new ArrayList<>(depositoEquipos.getElementos());
 
-        // Crear torneo físico y añadir equipos, modalidad y cantidad equipos
-        TorneoFisico torneoFisico = new TorneoFisico(
+        // Crear torneo físico usando Decorator
+        ITorneo torneoFisicoBase = new TorneoFisico(
                 "Copa Invierno",
                 equiposParaTorneo,
-                Modalidad.ELIMINACIONDIRECTA,
                 CantidadEquipos.CUATRO,
                 "Fútbol"
         );
+        ITorneo torneoFisico = new EliminacionDirectaDecorator(torneoFisicoBase);
 
-        // Crear torneo videojuegos
-        TorneoVideojuegos torneoVideojuegos = new TorneoVideojuegos(
+        // Crear torneo de videojuegos usando Decorator
+        ITorneo torneoVideojuegosBase = new TorneoVideojuegos(
                 "eSports Master",
                 equiposParaTorneo,
-                Modalidad.LIGASIMPLE,
                 CantidadEquipos.OCHO,
                 "Rocket League"
         );
+        ITorneo torneoVideojuegos = new LigaSimpleDecorator(torneoVideojuegosBase);
 
         // Imprimir información de participantes
         System.out.println("Participantes:");
@@ -71,7 +71,7 @@ public class Main {
         // Imprimir información del torneo físico
         System.out.println("\nTorneo Físico:");
         System.out.println("- Nombre: " + torneoFisico.getNombre());
-        System.out.println("- Deporte: " + torneoFisico.getDeporte());
+        System.out.println("- Deporte: " + ((TorneoFisico) torneoFisicoBase).getDeporte());
         System.out.println("- Modalidad: " + torneoFisico.getModalidad());
         System.out.println("- Cantidad de equipos: " + torneoFisico.getCantidadEquipos());
         System.out.println("- Equipos participantes:");
@@ -82,7 +82,7 @@ public class Main {
         // Imprimir información del torneo de videojuegos
         System.out.println("\nTorneo Videojuegos:");
         System.out.println("- Nombre: " + torneoVideojuegos.getNombre());
-        System.out.println("- Videojuego: " + torneoVideojuegos.getVideojuego());
+        System.out.println("- Videojuego: " + ((TorneoVideojuegos) torneoVideojuegosBase).getVideojuego());
         System.out.println("- Modalidad: " + torneoVideojuegos.getModalidad());
         System.out.println("- Cantidad de equipos: " + torneoVideojuegos.getCantidadEquipos());
         System.out.println("- Equipos participantes:");

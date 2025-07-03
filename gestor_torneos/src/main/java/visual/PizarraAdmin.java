@@ -98,7 +98,6 @@ public class PizarraAdmin extends JPanel {
         JButton btnCrear = new JButton("Crear Torneo");
         btnCrear.setBounds(230, 500, 140, 35);
 
-
         comboTipo.addActionListener(e -> {
             if (comboTipo.getSelectedIndex() == 0) {
                 lblDeporteVideojuego.setText("Deporte:");
@@ -146,21 +145,48 @@ public class PizarraAdmin extends JPanel {
                 return;
             }
 
+            //Cambios Decorator aquí
+            ITorneo torneoBase;
             if (comboTipo.getSelectedIndex() == 0) {
-                TorneoFisico torneo = new TorneoFisico(nombre, equiposSeleccionados, modalidad, cantidad, deporteVideojuego);
-                PanelPrincipal.depositoTorneos.addElemento(torneo);
+                torneoBase = new TorneoFisico(nombre, equiposSeleccionados, cantidad, deporteVideojuego);
             } else {
-                TorneoVideojuegos torneo = new TorneoVideojuegos(nombre, equiposSeleccionados, modalidad, cantidad, deporteVideojuego);
-                PanelPrincipal.depositoTorneos.addElemento(torneo);
+                torneoBase = new TorneoVideojuegos(nombre, equiposSeleccionados, cantidad, deporteVideojuego);
             }
+
+            ITorneo torneoDecorado;
+            switch (modalidad) {
+                case ELIMINACIONDIRECTA:
+                    torneoDecorado = new EliminacionDirectaDecorator(torneoBase);
+                    break;
+                case DOBLEELIMINACION:
+                    torneoDecorado = new DobleEliminacionDecorator(torneoBase);
+                    break;
+                case LIGASIMPLE:
+                    torneoDecorado = new LigaSimpleDecorator(torneoBase);
+                    break;
+                default:
+                    torneoDecorado = torneoBase;
+                    break;
+            }
+            PanelPrincipal.depositoTorneos.addElemento(torneoDecorado);
             JOptionPane.showMessageDialog(ventana, "¡Torneo creado exitosamente!");
             ventana.dispose();
         });
     }
 
-
     private void abrirVentanaAccederTorneo() {
-        JFrame ventana = new JFrame("Acceder a Torneo");
+        //referencia al PanelPrincipal
+        Container parent = this.getParent();
+        while (parent != null && !(parent instanceof PanelPrincipal)) {
+            parent = parent.getParent();
+        }
+        if (!(parent instanceof PanelPrincipal)) {
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar el panel principal.");
+            return;
+        }
+        PanelPrincipal panelPrincipal = (PanelPrincipal) parent;
+
+        JFrame ventana = new JFrame("Seleccionar Torneo");
         ventana.setSize(600, 400);
         ventana.setLocationRelativeTo(null);
         ventana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -174,8 +200,8 @@ public class PizarraAdmin extends JPanel {
         panel.add(lbl);
 
         DefaultListModel<String> modelo = new DefaultListModel<>();
-        java.util.List<Torneo> torneos = PanelPrincipal.depositoTorneos.getElementos();
-        for (Torneo t : torneos) {
+        java.util.List<ITorneo> torneos = PanelPrincipal.depositoTorneos.getElementos();
+        for (ITorneo t : torneos) {
             modelo.addElement(t.getNombre());
         }
         JList<String> listaTorneos = new JList<>(modelo);
@@ -188,38 +214,29 @@ public class PizarraAdmin extends JPanel {
         btnVer.setBounds(220, 290, 150, 35);
         panel.add(btnVer);
 
-        JTextArea detalles = new JTextArea();
-        detalles.setEditable(false);
-        detalles.setFont(new Font("Monospaced", Font.PLAIN, 13));
-        detalles.setBounds(40, 340, 500, 80);
-        panel.add(detalles);
-
         btnVer.addActionListener(e -> {
             int idx = listaTorneos.getSelectedIndex();
             if (idx < 0) {
                 JOptionPane.showMessageDialog(ventana, "Selecciona un torneo.");
                 return;
             }
-            Torneo seleccionado = torneos.get(idx);
-            StringBuilder info = new StringBuilder();
-            info.append("Nombre: ").append(seleccionado.getNombre()).append("\n");
-            info.append("Modalidad: ").append(seleccionado.getModalidad()).append("\n");
-            info.append("Cantidad equipos: ").append(seleccionado.getCantidadEquipos()).append("\n");
-            if (seleccionado instanceof TorneoFisico) {
-                info.append("Tipo: FÃsico\nDeporte: ").append(((TorneoFisico) seleccionado).getDeporte()).append("\n");
-            } else if (seleccionado instanceof TorneoVideojuegos) {
-                info.append("Tipo: Videojuego\nVideojuego: ").append(((TorneoVideojuegos) seleccionado).getVideojuego()).append("\n");
-            }
-            info.append("Equipos:\n");
-            for (Equipos eq : seleccionado.getEquipos()) {
-                info.append("  - ").append(eq.getNombre()).append("\n");
-            }
-            detalles.setText(info.toString());
+            ITorneo seleccionado = torneos.get(idx);
+            ventana.dispose();
+
+            //cambiar el panel principal
+            panelPrincipal.remove(panelPrincipal.panelCentral);
+            panelPrincipal.panelCentral = new TorneoActualAdmin(seleccionado);
+            panelPrincipal.panelCentral.setBounds(0, 0, 1200, 1000);
+            panelPrincipal.add(panelPrincipal.panelCentral);
+            panelPrincipal.setComponentZOrder(panelPrincipal.panelUsuario, 0);
+            panelPrincipal.repaint();
+            panelPrincipal.revalidate();
         });
 
         ventana.add(panel);
         ventana.setVisible(true);
     }
+
 
     @Override
     protected void paintComponent(Graphics g) {

@@ -26,11 +26,22 @@ public class TabletUsuario extends JPanel {
         botonVerTorneos.setBounds(350, 240, 200, 40);
         add(botonVerTorneos);
 
-        // Listener para abrir nuevo JFrame al presionar "Ver Torneos"
-        botonVerTorneos.addActionListener(e -> abrirVentanaVerTorneos());
+        // Listener para abrir el panel de torneos
+        botonVerTorneos.addActionListener(e -> abrirPanelVerTorneos());
     }
 
-    private void abrirVentanaVerTorneos() {
+    private void abrirPanelVerTorneos() {
+        // Referencia al PanelPrincipal
+        Container parent = this.getParent();
+        while (parent != null && !(parent instanceof PanelPrincipal)) {
+            parent = parent.getParent();
+        }
+        if (!(parent instanceof PanelPrincipal)) {
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar el panel principal.");
+            return;
+        }
+        PanelPrincipal panelPrincipal = (PanelPrincipal) parent;
+
         JFrame ventana = new JFrame("Ver Torneos Disponibles");
         ventana.setSize(600, 400);
         ventana.setLocationRelativeTo(null);
@@ -45,8 +56,8 @@ public class TabletUsuario extends JPanel {
         panel.add(lbl);
 
         DefaultListModel<String> modelo = new DefaultListModel<>();
-        java.util.List<Torneo> torneos = visual.PanelPrincipal.depositoTorneos.getElementos();
-        for (Torneo t : torneos) {
+        java.util.List<ITorneo> torneos = visual.PanelPrincipal.depositoTorneos.getElementos();
+        for (ITorneo t : torneos) {
             modelo.addElement(t.getNombre());
         }
         JList<String> listaTorneos = new JList<>(modelo);
@@ -59,33 +70,23 @@ public class TabletUsuario extends JPanel {
         btnVer.setBounds(220, 290, 150, 35);
         panel.add(btnVer);
 
-        JTextArea detalles = new JTextArea();
-        detalles.setEditable(false);
-        detalles.setFont(new Font("Monospaced", Font.PLAIN, 13));
-        detalles.setBounds(40, 340, 500, 80);
-        panel.add(detalles);
-
-        btnVer.addActionListener(e -> {
+        btnVer.addActionListener(ev -> {
             int idx = listaTorneos.getSelectedIndex();
             if (idx < 0) {
                 JOptionPane.showMessageDialog(ventana, "Selecciona un torneo.");
                 return;
             }
-            Torneo seleccionado = torneos.get(idx);
-            StringBuilder info = new StringBuilder();
-            info.append("Nombre: ").append(seleccionado.getNombre()).append("\n");
-            info.append("Modalidad: ").append(seleccionado.getModalidad()).append("\n");
-            info.append("Cantidad equipos: ").append(seleccionado.getCantidadEquipos()).append("\n");
-            if (seleccionado instanceof TorneoFisico) {
-                info.append("Tipo: FÃsico\nDeporte: ").append(((TorneoFisico) seleccionado).getDeporte()).append("\n");
-            } else if (seleccionado instanceof TorneoVideojuegos) {
-                info.append("Tipo: Videojuego\nVideojuego: ").append(((TorneoVideojuegos) seleccionado).getVideojuego()).append("\n");
-            }
-            info.append("Equipos:\n");
-            for (Equipos eq : seleccionado.getEquipos()) {
-                info.append("  - ").append(eq.getNombre()).append("\n");
-            }
-            detalles.setText(info.toString());
+            ITorneo seleccionado = torneos.get(idx);
+            ventana.dispose();
+
+            // Cambia el panel central en PanelPrincipal
+            panelPrincipal.remove(panelPrincipal.panelCentral);
+            panelPrincipal.panelCentral = new TorneoActualUsuario(seleccionado);
+            panelPrincipal.panelCentral.setBounds(0, 0, 1200, 1000);
+            panelPrincipal.add(panelPrincipal.panelCentral);
+            panelPrincipal.setComponentZOrder(panelPrincipal.panelUsuario, 0);
+            panelPrincipal.repaint();
+            panelPrincipal.revalidate();
         });
 
         ventana.add(panel);

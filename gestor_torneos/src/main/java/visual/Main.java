@@ -3,6 +3,8 @@ package visual;
 import Logico.*;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -32,5 +34,18 @@ public class Main {
                 Equipo.getParticipantesCreados().add(p);
             }
         }
+
+        //torneo de prueba con los 4 equipos
+        List<Equipos> equiposTorneo = new ArrayList<>(Equipo.getEquiposCreados());
+        ITorneo torneoBase = new TorneoFisico(
+                "Torneo de Prueba",
+                equiposTorneo,
+                CantidadEquipos.CUATRO,
+                "Fútbol"
+        );
+        ITorneo torneoConModalidad = new EliminacionDirectaDecorator(torneoBase);
+
+        // Agregar al depósito global de torneos
+        PanelPrincipal.depositoTorneos.addElemento(torneoConModalidad);
     }
 }

@@ -5,11 +5,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PanelPrincipal extends JPanel {
-    public static Deposito<Torneo> depositoTorneos = new Deposito<>();
+    public static Deposito<ITorneo> depositoTorneos = new Deposito<>();
 
-    private String estadoUsuario; // null, "admin", "usuario"
-    private Usuario panelUsuario;
-    private JPanel panelCentral;
+    private String estadoUsuario;
+    public Usuario panelUsuario;
+    public JPanel panelCentral;
 
     public PanelPrincipal() {
         setLayout(null);
