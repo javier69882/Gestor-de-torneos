@@ -223,10 +223,12 @@ public class PizarraAdmin extends JPanel {
             ITorneo seleccionado = torneos.get(idx);
             ventana.dispose();
 
-            // Cambia el panel central según la modalidad
+            // Cambia el panel central segÃºn la modalidad/decorador
             panelPrincipal.remove(panelPrincipal.panelCentral);
 
-            if ("LIGA_SIMPLE".equalsIgnoreCase(seleccionado.getModalidad())) {
+            if (seleccionado instanceof EliminacionDirectaDecorator) {
+                panelPrincipal.panelCentral = new TorneoEliminacionDirectaAdmin((EliminacionDirectaDecorator)seleccionado);
+            } else if ("LIGA_SIMPLE".equalsIgnoreCase(seleccionado.getModalidad())) {
                 panelPrincipal.panelCentral = new TorneoLigaSimpleAdmin(seleccionado);
             } else {
                 panelPrincipal.panelCentral = new TorneoActualAdmin(seleccionado);

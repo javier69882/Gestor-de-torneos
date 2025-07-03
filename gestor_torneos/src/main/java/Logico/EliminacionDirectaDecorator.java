@@ -5,7 +5,7 @@ import java.util.List;
 
 public class EliminacionDirectaDecorator extends TorneoDecorator {
 
-    private final List<List<Partido>> rondas;
+    public final List<List<Partido>> rondas;
     private int rondaActual;
     private Equipos campeon;
 
@@ -63,6 +63,9 @@ public class EliminacionDirectaDecorator extends TorneoDecorator {
     @Override
     public void registrarResultado(Partido partido, int puntajeA, int puntajeB) {
         if (partido.isJugado()) return;
+        if (puntajeA == puntajeB) {
+            throw new ValorNullException("No puede haber empate en eliminación directa. Reingrese los datos.");
+        }
         partido.setPuntajeA(puntajeA);
         partido.setPuntajeB(puntajeB);
         partido.setJugado(true);
@@ -79,6 +82,7 @@ public class EliminacionDirectaDecorator extends TorneoDecorator {
             avanzarRonda();
         }
     }
+
 
     private void avanzarRonda() {
         List<Partido> rondaActualPartidos = rondas.get(rondaActual);
