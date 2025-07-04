@@ -1,11 +1,14 @@
 package Logico;
 
+import java.time.LocalDateTime;
+
 public class Partido {
     private Equipos equipoA;
     private Equipos equipoB;
     private Integer puntajeA = null;
     private Integer puntajeB = null;
     private boolean jugado = false;
+    private LocalDateTime fechaHoraJugado; // registra hora
 
     public Partido(Equipos equipoA, Equipos equipoB) {
         this.equipoA = equipoA;
@@ -27,6 +30,9 @@ public class Partido {
     public boolean isJugado() {
         return jugado;
     }
+    public LocalDateTime getFechaHoraJugado() {
+        return fechaHoraJugado;
+    }
 
     public void setPuntajeA(int puntajeA) {
         this.puntajeA = puntajeA;
@@ -34,7 +40,12 @@ public class Partido {
     public void setPuntajeB(int puntajeB) {
         this.puntajeB = puntajeB;
     }
+
     public void setJugado(boolean jugado) {
+        //registra la fecha/hora la primera vez que se marca como jugado
+        if (jugado && !this.jugado) {
+            this.fechaHoraJugado = LocalDateTime.now();
+        }
         this.jugado = jugado;
     }
 
@@ -80,6 +91,7 @@ public class Partido {
         } else {
             marcador = "";
         }
-        return nombreA + " vs " + nombreB + marcador;
+        String fecha = (fechaHoraJugado != null) ? " [" + fechaHoraJugado.toString() + "]" : "";
+        return nombreA + " vs " + nombreB + marcador + fecha;
     }
 }

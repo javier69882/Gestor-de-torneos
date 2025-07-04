@@ -4,6 +4,7 @@ import Logico.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class TorneoDobleEliminacionUsuario extends JPanel {
     private DobleEliminacionDecorator torneo;
@@ -11,7 +12,7 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
     private JList<String> listaIda, listaVuelta;
     private DefaultListModel<String> modeloIda, modeloVuelta;
     private JLabel lblCampeon;
-
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private final int OFFSET_X = 220;
 
     public TorneoDobleEliminacionUsuario(DobleEliminacionDecorator torneo) {
@@ -31,7 +32,6 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
         comboRondas.setBounds(90 + OFFSET_X, 90, 160, 32);
         add(comboRondas);
 
-        // Modelos y listas
         modeloIda = new DefaultListModel<>();
         modeloVuelta = new DefaultListModel<>();
         listaIda = new JList<>(modeloIda);
@@ -107,16 +107,34 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
         List<Partido> ida = torneo.rondasIda.get(ronda);
         List<Partido> vuelta = torneo.rondasVuelta.get(ronda);
         for (Partido p : ida) {
-            String estado = p.isJugado()
-                    ? p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - " + p.getPuntajeB() + " " + p.getEquipoB().getNombre()
-                    : p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            String estado;
+            if (p.isJugado()) {
+                String fecha = "";
+                if (p.getFechaHoraJugado() != null) {
+                    fecha = " [" + p.getFechaHoraJugado().format(FORMATTER) + "]";
+                }
+                estado = p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - " +
+                        p.getPuntajeB() + " " + p.getEquipoB().getNombre() + fecha;
+            } else {
+                estado = p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            }
             modeloIda.addElement(estado);
         }
         for (Partido p : vuelta) {
-            String estado = p.isJugado()
-                    ? p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - " + p.getPuntajeB() + " " + p.getEquipoB().getNombre()
-                    : p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            String estado;
+            if (p.isJugado()) {
+                String fecha = "";
+                if (p.getFechaHoraJugado() != null) {
+                    fecha = " [" + p.getFechaHoraJugado().format(FORMATTER) + "]";
+                }
+                estado = p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - " +
+                        p.getPuntajeB() + " " + p.getEquipoB().getNombre() + fecha;
+            } else {
+                estado = p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            }
             modeloVuelta.addElement(estado);
         }
     }
+
+
 }

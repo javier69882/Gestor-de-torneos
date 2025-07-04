@@ -86,6 +86,8 @@ public class TabletUsuario extends JPanel {
                 panelPrincipal.panelCentral = new TorneoEliminacionDirectaUsuario((EliminacionDirectaDecorator)seleccionado);
             } else if (seleccionado instanceof DobleEliminacionDecorator) {
                 panelPrincipal.panelCentral = new TorneoDobleEliminacionUsuario((DobleEliminacionDecorator)seleccionado);
+            } else if ("LIGA_SIMPLE".equals(seleccionado.getModalidad())) {
+                panelPrincipal.panelCentral = new TorneoLigaSimpleUsuario(seleccionado);
             } else {
                 panelPrincipal.panelCentral = new TorneoActualUsuario(seleccionado);
             }
@@ -99,6 +101,7 @@ public class TabletUsuario extends JPanel {
         ventana.add(panel);
         ventana.setVisible(true);
     }
+
 
     public JButton getBotonVerEquipos() {
         return botonVerEquipos;

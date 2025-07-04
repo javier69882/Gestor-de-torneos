@@ -2,19 +2,15 @@ package visual;
 
 import Logico.*;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.util.List;
 
 public class TorneoActualUsuario extends JPanel {
     private ITorneo torneo;
-    private JTable tablaPosiciones;
 
     public TorneoActualUsuario(ITorneo torneo) {
         this.torneo = torneo;
         setLayout(null);
         setBackground(new Color(230, 250, 255));
-
 
         JLabel lblTitulo = new JLabel("Detalles del Torneo (Vista Usuario)");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 28));
@@ -32,7 +28,6 @@ public class TorneoActualUsuario extends JPanel {
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
         info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
 
-        // Ver si el torneo base es físico o videojuego
         ITorneo base = torneo;
         while (base instanceof TorneoDecorator) {
             base = ((TorneoDecorator) base).getBase();
@@ -48,23 +43,12 @@ public class TorneoActualUsuario extends JPanel {
 
         area.setText(info.toString());
         JScrollPane scrollInfo = new JScrollPane(area);
-        scrollInfo.setBounds(350, 70, 500, 100);
+        scrollInfo.setBounds(350, 70, 500, 150);
         add(scrollInfo);
-
-        // Solo agregar la tabla si es LIGA_SIMPLE
-        if (torneo.getModalidad() == "LIGA_SIMPLE") {
-            tablaPosiciones = new JTable(
-                    getDatosTabla(),
-                    new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"}
-            );
-            JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
-            scrollTabla.setBounds(350, 190, 500, 300);
-            add(scrollTabla);
-        }
 
         // Botón Volver
         JButton btnVolver = new JButton("Volver");
-        btnVolver.setBounds(350, 510, 120, 35);
+        btnVolver.setBounds(350, 260, 120, 35);
         add(btnVolver);
 
         btnVolver.addActionListener(e -> {
@@ -84,19 +68,5 @@ public class TorneoActualUsuario extends JPanel {
                 pp.revalidate();
             }
         });
-    }
-
-    private Object[][] getDatosTabla() {
-        List<PosicionLiga> tabla = torneo.getTablaPosiciones();
-        Object[][] datos = new Object[tabla.size()][5];
-        for (int i = 0; i < tabla.size(); i++) {
-            PosicionLiga pos = tabla.get(i);
-            datos[i][0] = pos.equipo.getNombre();
-            datos[i][1] = pos.puntos;
-            datos[i][2] = pos.jugados;
-            datos[i][3] = pos.golesFavor;
-            datos[i][4] = pos.golesContra;
-        }
-        return datos;
     }
 }

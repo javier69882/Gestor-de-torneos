@@ -5,51 +5,59 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class TorneoLigaSimpleAdmin extends JPanel {
     private ITorneo torneo;
-    private JList<Partido> listaPartidos;
-    private DefaultListModel<Partido> modeloPartidos;
+    private JList<String> listaPartidos;
+    private DefaultListModel<String> modeloPartidos;
     private JTable tablaPosiciones;
     private JButton btnRegistrar;
     private JTextField txtGolesA, txtGolesB;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     public TorneoLigaSimpleAdmin(ITorneo torneo) {
         this.torneo = torneo;
         setLayout(new BorderLayout());
 
-
         JLabel titulo = new JLabel("Torneo - Modalidad LIGA_SIMPLE", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         add(titulo, BorderLayout.NORTH);
 
-
         JPanel panelPrincipal = new JPanel(new BorderLayout());
-        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(0, 250, 0, 0)); // 250 px margen izquierdo
-
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(0, 250, 0, 0));
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(250); // Ajusta para más/menos ancho de la lista
+        splitPane.setDividerLocation(250);
 
-        // Panel izquierdo lista de partidos
         modeloPartidos = new DefaultListModel<>();
-        for (Partido p : torneo.getPartidos()) modeloPartidos.addElement(p);
+        for (Partido p : torneo.getPartidos()) {
+            String texto;
+            if (p.isJugado()) {
+                String fecha = "";
+                if (p.getFechaHoraJugado() != null) {
+                    fecha = " [" + p.getFechaHoraJugado().format(FORMATTER) + "]";
+                }
+                texto = p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - "
+                        + p.getPuntajeB() + " " + p.getEquipoB().getNombre() + fecha;
+            } else {
+                texto = p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            }
+            modeloPartidos.addElement(texto);
+        }
         listaPartidos = new JList<>(modeloPartidos);
         listaPartidos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollLista = new JScrollPane(listaPartidos);
         splitPane.setLeftComponent(scrollLista);
 
-        // tabla de posiciones + registro resultado
         JPanel panelDerecho = new JPanel(new BorderLayout());
 
-        //Tabla de posiciones con scroll
         tablaPosiciones = new JTable(getDatosTabla(), new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"});
         JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
         panelDerecho.add(scrollTabla, BorderLayout.CENTER);
 
-        //  Panel de registro resultado
         JPanel panelRegistro = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        panelRegistro.setPreferredSize(new Dimension(500, 80)); // altura fija para que siempre se vea
+        panelRegistro.setPreferredSize(new Dimension(500, 80));
 
         panelRegistro.add(new JLabel("Goles Equipo A:"));
         txtGolesA = new JTextField(2);
@@ -61,24 +69,25 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         btnRegistrar = new JButton("Registrar Resultado");
         panelRegistro.add(btnRegistrar);
 
-
         JButton btnVolver = new JButton("Volver");
         panelRegistro.add(btnVolver);
 
-
         btnRegistrar.addActionListener(e -> {
-            Partido seleccionado = listaPartidos.getSelectedValue();
-            if (seleccionado != null && !seleccionado.isJugado()) {
-                try {
-                    int golesA = Integer.parseInt(txtGolesA.getText());
-                    int golesB = Integer.parseInt(txtGolesB.getText());
-                    torneo.registrarResultado(seleccionado, golesA, golesB);
-                    actualizarVista();
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Ingrese números válidos.");
+            int idx = listaPartidos.getSelectedIndex();
+            if (idx >= 0) {
+                Partido seleccionado = torneo.getPartidos().get(idx);
+                if (seleccionado != null && !seleccionado.isJugado()) {
+                    try {
+                        int golesA = Integer.parseInt(txtGolesA.getText());
+                        int golesB = Integer.parseInt(txtGolesB.getText());
+                        torneo.registrarResultado(seleccionado, golesA, golesB);
+                        actualizarVista();
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "Ingrese números válidos.");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Seleccione un partido no jugado.");
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Seleccione un partido no jugado.");
             }
         });
 
@@ -99,20 +108,13 @@ public class TorneoLigaSimpleAdmin extends JPanel {
             }
         });
 
-
         panelDerecho.add(panelRegistro, BorderLayout.SOUTH);
-
-
         splitPane.setRightComponent(panelDerecho);
-
-
         panelPrincipal.add(splitPane, BorderLayout.CENTER);
-
-
         add(panelPrincipal, BorderLayout.CENTER);
     }
 
-    //Generar datos para la tabla de posiciones
+
     private Object[][] getDatosTabla() {
         List<PosicionLiga> tabla = torneo.getTablaPosiciones();
         Object[][] datos = new Object[tabla.size()][5];
@@ -127,13 +129,26 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         return datos;
     }
 
-    // Refrescar la vista después de registrar un resultado
     private void actualizarVista() {
         modeloPartidos.clear();
-        for (Partido p : torneo.getPartidos()) modeloPartidos.addElement(p);
+        for (Partido p : torneo.getPartidos()) {
+            String texto;
+            if (p.isJugado()) {
+                String fecha = "";
+                if (p.getFechaHoraJugado() != null) {
+                    fecha = " [" + p.getFechaHoraJugado().format(FORMATTER) + "]";
+                }
+                texto = p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - "
+                        + p.getPuntajeB() + " " + p.getEquipoB().getNombre() + fecha;
+            } else {
+                texto = p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            }
+            modeloPartidos.addElement(texto);
+        }
 
         tablaPosiciones.setModel(new DefaultTableModel(getDatosTabla(),
                 new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLE FAVOR", "GOLES CONTRA"}));
         repaint();
     }
+
 }

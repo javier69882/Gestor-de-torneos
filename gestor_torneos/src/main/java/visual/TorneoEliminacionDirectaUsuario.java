@@ -4,6 +4,7 @@ import Logico.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 public class TorneoEliminacionDirectaUsuario extends JPanel {
     private EliminacionDirectaDecorator torneo;
@@ -11,8 +12,8 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
     private JList<String> listaPartidos;
     private DefaultListModel<String> modeloPartidos;
     private JLabel lblCampeon;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    // Offset horizontal para que no choque con panel usuario
     private final int OFFSET_X = 220;
 
     public TorneoEliminacionDirectaUsuario(EliminacionDirectaDecorator torneo) {
@@ -20,12 +21,11 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         setLayout(null);
         setBackground(new Color(245, 255, 240));
 
-        JLabel lblTitulo = new JLabel("Eliminación Directa - Vista Usuario");
+        JLabel lblTitulo = new JLabel("Eliminación Directa ");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
         lblTitulo.setBounds(370 + OFFSET_X, 20, 500, 40);
         add(lblTitulo);
 
-        // Combo de rondas
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondas.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
@@ -33,7 +33,6 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         comboRondas.setBounds(90 + OFFSET_X, 90, 160, 32);
         add(comboRondas);
 
-        // Lista de partidos de la ronda seleccionada
         modeloPartidos = new DefaultListModel<>();
         listaPartidos = new JList<>(modeloPartidos);
         listaPartidos.setFont(new Font("Monospaced", Font.PLAIN, 15));
@@ -43,13 +42,11 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
-        // Campeón
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 22));
         lblCampeon.setBounds(450 + OFFSET_X, 300, 400, 40);
         add(lblCampeon);
 
-        // Botón Volver
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBounds(30 + OFFSET_X, 530, 100, 32);
         add(btnVolver);
@@ -75,7 +72,6 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
     }
 
     private void refrescarVista() {
-        // Refresca lista de rondas
         comboRondas.removeAllItems();
         for (int i = 0; i < torneo.rondas.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
@@ -83,9 +79,8 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondas.size() - 1);
         refrescarPartidos();
 
-        // Mostrar campeón si existe
         if (torneo.getCampeon() != null) {
-            lblCampeon.setText("🏆 Campeón: " + torneo.getCampeon().getNombre());
+            lblCampeon.setText(" Campeón: " + torneo.getCampeon().getNombre());
         } else {
             lblCampeon.setText("");
         }
@@ -97,10 +92,19 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         modeloPartidos.clear();
         List<Partido> partidos = torneo.rondas.get(ronda);
         for (Partido p : partidos) {
-            String estado = p.isJugado()
-                    ? p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - " + p.getPuntajeB() + " " + p.getEquipoB().getNombre()
-                    : p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            String estado;
+            if (p.isJugado()) {
+                String fecha = "";
+                if (p.getFechaHoraJugado() != null) {
+                    fecha = " [" + p.getFechaHoraJugado().format(FORMATTER) + "]";
+                }
+                estado = p.getEquipoA().getNombre() + " " + p.getPuntajeA() + " - "
+                        + p.getPuntajeB() + " " + p.getEquipoB().getNombre() + fecha;
+            } else {
+                estado = p.getEquipoA().getNombre() + " vs " + p.getEquipoB().getNombre() + " (pendiente)";
+            }
             modeloPartidos.addElement(estado);
         }
     }
+
 }
