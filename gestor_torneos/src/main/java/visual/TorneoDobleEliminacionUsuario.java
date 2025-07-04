@@ -15,21 +15,32 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
     private final int OFFSET_X = 220;
 
+    private JTextArea areaInfo;  // Añadido para mostrar info del torneo
+
     public TorneoDobleEliminacionUsuario(DobleEliminacionDecorator torneo) {
         this.torneo = torneo;
         setLayout(null);
         setBackground(new Color(245, 255, 240));
 
+        // Área de texto con info del torneo
+        areaInfo = new JTextArea();
+        areaInfo.setEditable(false);
+        areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        areaInfo.setBackground(new Color(240, 250, 255));
+        JScrollPane scrollInfo = new JScrollPane(areaInfo);
+        scrollInfo.setBounds(20 + OFFSET_X, 10, 900, 110);
+        add(scrollInfo);
+
         JLabel lblTitulo = new JLabel("Doble Eliminación - Vista Usuario");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
-        lblTitulo.setBounds(370 + OFFSET_X, 20, 500, 40);
+        lblTitulo.setBounds(370 + OFFSET_X, 130, 500, 40);
         add(lblTitulo);
 
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondasIda.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
         }
-        comboRondas.setBounds(90 + OFFSET_X, 90, 160, 32);
+        comboRondas.setBounds(90 + OFFSET_X, 180, 160, 32);
         add(comboRondas);
 
         modeloIda = new DefaultListModel<>();
@@ -40,28 +51,28 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
         listaVuelta.setFont(new Font("Monospaced", Font.PLAIN, 15));
 
         JLabel lblIda = new JLabel("Ida:");
-        lblIda.setBounds(90 + OFFSET_X, 130, 100, 24);
+        lblIda.setBounds(90 + OFFSET_X, 220, 100, 24);
         add(lblIda);
         JScrollPane scrollIda = new JScrollPane(listaIda);
-        scrollIda.setBounds(90 + OFFSET_X, 160, 320, 160);
+        scrollIda.setBounds(90 + OFFSET_X, 250, 320, 160);
         add(scrollIda);
 
         JLabel lblVuelta = new JLabel("Vuelta:");
-        lblVuelta.setBounds(90 + OFFSET_X, 330, 100, 24);
+        lblVuelta.setBounds(90 + OFFSET_X, 420, 100, 24);
         add(lblVuelta);
         JScrollPane scrollVuelta = new JScrollPane(listaVuelta);
-        scrollVuelta.setBounds(90 + OFFSET_X, 360, 320, 160);
+        scrollVuelta.setBounds(90 + OFFSET_X, 450, 320, 160);
         add(scrollVuelta);
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 22));
-        lblCampeon.setBounds(450 + OFFSET_X, 300, 400, 40);
+        lblCampeon.setBounds(450 + OFFSET_X, 620, 400, 40);
         add(lblCampeon);
 
         JButton btnVolver = new JButton("Volver");
-        btnVolver.setBounds(30 + OFFSET_X, 530, 100, 32);
+        btnVolver.setBounds(30 + OFFSET_X, 670, 100, 32);
         add(btnVolver);
 
         btnVolver.addActionListener(e -> {
@@ -91,6 +102,26 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
         }
         comboRondas.setSelectedIndex(torneo.rondasIda.size() - 1);
         refrescarPartidos();
+
+        // Construye la info del torneo para mostrar
+        StringBuilder info = new StringBuilder();
+        info.append("Nombre: ").append(torneo.getNombre()).append("\n");
+        info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
+
+        ITorneo base = torneo;
+        while (base instanceof TorneoDecorator) {
+            base = ((TorneoDecorator) base).getBase();
+        }
+        if (base instanceof TorneoFisico) {
+            info.append("Tipo: Físico\n");
+            info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
+        } else if (base instanceof TorneoVideojuegos) {
+            info.append("Tipo: Videojuego\n");
+            info.append("Videojuego: ").append(((TorneoVideojuegos) base).getVideojuego()).append("\n");
+        }
+
+        areaInfo.setText(info.toString());
 
         if (torneo.getCampeon() != null) {
             lblCampeon.setText("Campeón: " + torneo.getCampeon().getNombre());
@@ -135,6 +166,4 @@ public class TorneoDobleEliminacionUsuario extends JPanel {
             modeloVuelta.addElement(estado);
         }
     }
-
-
 }

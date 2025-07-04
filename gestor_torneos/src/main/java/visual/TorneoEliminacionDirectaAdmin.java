@@ -16,15 +16,26 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
     private JLabel lblCampeon;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    private JTextArea areaInfo;
+
     public TorneoEliminacionDirectaAdmin(EliminacionDirectaDecorator torneo) {
         this.torneo = torneo;
         setLayout(null);
         setBackground(new Color(230, 255, 250)); // Más suave
 
+        // Área de texto con info del torneo
+        areaInfo = new JTextArea();
+        areaInfo.setEditable(false);
+        areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        areaInfo.setBackground(new Color(240, 250, 255));
+        JScrollPane scrollInfo = new JScrollPane(areaInfo);
+        scrollInfo.setBounds(240, 10, 720, 110);
+        add(scrollInfo);
+
         // Título centrado
         JLabel lblTitulo = new JLabel("Eliminación Directa - ADMIN");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 28));
-        lblTitulo.setBounds(0, 35, 1200, 40);
+        lblTitulo.setBounds(0, 130, 1200, 40);
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblTitulo);
 
@@ -33,7 +44,7 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         for (int i = 0; i < torneo.rondas.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
         }
-        comboRondas.setBounds(440, 100, 320, 36); // Centrado
+        comboRondas.setBounds(440, 180, 320, 36); // Centrado
         add(comboRondas);
 
         // Lista de partidos
@@ -41,14 +52,14 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         listaPartidos = new JList<>(modeloPartidos);
         listaPartidos.setFont(new Font("Monospaced", Font.PLAIN, 20));
         JScrollPane scrollLista = new JScrollPane(listaPartidos);
-        scrollLista.setBounds(240, 160, 720, 260); // Centrado y más alto
+        scrollLista.setBounds(240, 220, 720, 260); // Centrado y más alto
         add(scrollLista);
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
         // Panel registro resultado,
         JPanel panelRegistro = new JPanel(null);
-        panelRegistro.setBounds(340, 440, 520, 80); // Bien debajo de la lista y centrado
+        panelRegistro.setBounds(340, 500, 520, 80); // Bien debajo de la lista y centrado
         panelRegistro.setBackground(new Color(240, 250, 255));
         panelRegistro.setBorder(BorderFactory.createTitledBorder("Registrar Resultado"));
 
@@ -75,7 +86,7 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         // Campeón, abajo centrado
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 20));
-        lblCampeon.setBounds(0, 535, 1200, 35);
+        lblCampeon.setBounds(0, 600, 1200, 35);
         lblCampeon.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblCampeon);
 
@@ -135,6 +146,26 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondas.size() - 1);
         refrescarPartidos();
 
+        // Mostrar info del torneo arriba
+        StringBuilder info = new StringBuilder();
+        info.append("Nombre: ").append(torneo.getNombre()).append("\n");
+        info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
+
+        ITorneo base = torneo;
+        while (base instanceof TorneoDecorator) {
+            base = ((TorneoDecorator) base).getBase();
+        }
+        if (base instanceof TorneoFisico) {
+            info.append("Tipo: Físico\n");
+            info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
+        } else if (base instanceof TorneoVideojuegos) {
+            info.append("Tipo: Videojuego\n");
+            info.append("Videojuego: ").append(((TorneoVideojuegos) base).getVideojuego()).append("\n");
+        }
+
+        areaInfo.setText(info.toString());
+
         if (torneo.getCampeon() != null) {
             lblCampeon.setText("Campeón: " + torneo.getCampeon().getNombre());
         } else {
@@ -162,6 +193,4 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
             modeloPartidos.addElement(estado);
         }
     }
-
-
 }

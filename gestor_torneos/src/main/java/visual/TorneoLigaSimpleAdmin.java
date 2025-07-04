@@ -16,13 +16,26 @@ public class TorneoLigaSimpleAdmin extends JPanel {
     private JTextField txtGolesA, txtGolesB;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    private JTextArea areaInfo;
+
     public TorneoLigaSimpleAdmin(ITorneo torneo) {
         this.torneo = torneo;
         setLayout(new BorderLayout());
 
+        // Área de texto con info del torneo arriba
+        areaInfo = new JTextArea();
+        areaInfo.setEditable(false);
+        areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        areaInfo.setBackground(new Color(240, 250, 255));
+        JScrollPane scrollInfo = new JScrollPane(areaInfo);
+        scrollInfo.setPreferredSize(new Dimension(0, 110)); // altura fija
+        add(scrollInfo, BorderLayout.NORTH);
+
         JLabel titulo = new JLabel("Torneo - Modalidad LIGA_SIMPLE", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        add(titulo, BorderLayout.NORTH);
+        JPanel panelTitulo = new JPanel(new BorderLayout());
+        panelTitulo.add(titulo, BorderLayout.CENTER);
+        add(panelTitulo, BorderLayout.CENTER);
 
         JPanel panelPrincipal = new JPanel(new BorderLayout());
         panelPrincipal.setBorder(BorderFactory.createEmptyBorder(0, 250, 0, 0));
@@ -111,7 +124,9 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         panelDerecho.add(panelRegistro, BorderLayout.SOUTH);
         splitPane.setRightComponent(panelDerecho);
         panelPrincipal.add(splitPane, BorderLayout.CENTER);
-        add(panelPrincipal, BorderLayout.CENTER);
+        add(panelPrincipal, BorderLayout.SOUTH);
+
+        actualizarVista();
     }
 
 
@@ -149,6 +164,24 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         tablaPosiciones.setModel(new DefaultTableModel(getDatosTabla(),
                 new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLE FAVOR", "GOLES CONTRA"}));
         repaint();
-    }
 
+        // Actualizar info del torneo en el área de texto
+        StringBuilder info = new StringBuilder();
+        info.append("Nombre: ").append(torneo.getNombre()).append("\n");
+        info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
+
+        ITorneo base = torneo;
+        while (base instanceof TorneoDecorator) {
+            base = ((TorneoDecorator) base).getBase();
+        }
+        if (base instanceof TorneoFisico) {
+            info.append("Tipo: Físico\n");
+            info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
+        } else if (base instanceof TorneoVideojuegos) {
+            info.append("Tipo: Videojuego\n");
+            info.append("Videojuego: ").append(((TorneoVideojuegos) base).getVideojuego()).append("\n");
+        }
+        areaInfo.setText(info.toString());
+    }
 }

@@ -16,36 +16,48 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
     private JLabel lblCampeon;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    private JTextArea areaInfo;
+
     public TorneoDobleEliminacionAdmin(DobleEliminacionDecorator torneo) {
         this.torneo = torneo;
-        setLayout(null);
+        setLayout(new BorderLayout());
         setBackground(new Color(230, 255, 250)); // Igual a Eliminación Directa
 
-        // Título
-        JLabel lblTitulo = new JLabel("Doble Eliminación - ADMIN");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 28));
-        lblTitulo.setBounds(0, 35, 1200, 40);
-        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-        add(lblTitulo);
+        JLabel titulo = new JLabel("Torneo - Modalidad DOBLE_ELIMINACION", JLabel.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        add(titulo, BorderLayout.NORTH);
+
+        // Panel para info + resto del contenido
+        JPanel panelCentral = new JPanel(null);
+        add(panelCentral, BorderLayout.CENTER);
+
+        // Área de texto con info básica del torneo (scroll)
+        areaInfo = new JTextArea();
+        areaInfo.setEditable(false);
+        areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        areaInfo.setBackground(new Color(240, 250, 255));
+        JScrollPane scrollInfo = new JScrollPane(areaInfo);
+        scrollInfo.setBounds(20, 10, 1160, 110);
+        panelCentral.add(scrollInfo);
 
         // Combo de rondas
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondasIda.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
         }
-        comboRondas.setBounds(440, 100, 320, 36); // Centrado
-        add(comboRondas);
+        comboRondas.setBounds(440, 130, 320, 36);
+        panelCentral.add(comboRondas);
 
         // Labels Ida/Vuelta
         JLabel lblIda = new JLabel("Ida:");
         lblIda.setFont(new Font("Arial", Font.BOLD, 17));
-        lblIda.setBounds(350, 150, 70, 24);
-        add(lblIda);
+        lblIda.setBounds(350, 180, 70, 24);
+        panelCentral.add(lblIda);
 
         JLabel lblVuelta = new JLabel("Vuelta:");
         lblVuelta.setFont(new Font("Arial", Font.BOLD, 17));
-        lblVuelta.setBounds(770, 150, 90, 24);
-        add(lblVuelta);
+        lblVuelta.setBounds(770, 180, 90, 24);
+        panelCentral.add(lblVuelta);
 
         // Listas de partidos
         modeloIda = new DefaultListModel<>();
@@ -53,20 +65,20 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         listaIda = new JList<>(modeloIda);
         listaIda.setFont(new Font("Monospaced", Font.PLAIN, 18));
         JScrollPane scrollIda = new JScrollPane(listaIda);
-        scrollIda.setBounds(220, 180, 420, 220); // MÁS ANCHO!
-        add(scrollIda);
+        scrollIda.setBounds(220, 210, 420, 220);
+        panelCentral.add(scrollIda);
 
         listaVuelta = new JList<>(modeloVuelta);
         listaVuelta.setFont(new Font("Monospaced", Font.PLAIN, 18));
         JScrollPane scrollVuelta = new JScrollPane(listaVuelta);
-        scrollVuelta.setBounds(640, 180, 420, 220); // MÁS ANCHO!
-        add(scrollVuelta);
+        scrollVuelta.setBounds(640, 210, 420, 220);
+        panelCentral.add(scrollVuelta);
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
-        // Panel registro resultado centrado debajo de las listas
+        // Panel registro resultado
         JPanel panelRegistro = new JPanel(null);
-        panelRegistro.setBounds(340, 420, 520, 80);
+        panelRegistro.setBounds(340, 440, 520, 80);
         panelRegistro.setBackground(new Color(240, 250, 255));
         panelRegistro.setBorder(BorderFactory.createTitledBorder("Registrar Resultado"));
 
@@ -88,19 +100,19 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         btnRegistrar.setBounds(390, 27, 120, 32);
         panelRegistro.add(btnRegistrar);
 
-        add(panelRegistro);
+        panelCentral.add(panelRegistro);
 
         // Campeón
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 20));
-        lblCampeon.setBounds(0, 520, 1200, 35);
+        lblCampeon.setBounds(0, 530, 1200, 35);
         lblCampeon.setHorizontalAlignment(SwingConstants.CENTER);
-        add(lblCampeon);
+        panelCentral.add(lblCampeon);
 
         // Botón Volver
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBounds(40, 850, 120, 35);
-        add(btnVolver);
+        panelCentral.add(btnVolver);
 
         btnVolver.addActionListener(e -> {
             Container parent = this.getParent();
@@ -161,6 +173,26 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondasIda.size() - 1);
         refrescarPartidos();
 
+        // Actualiza la info del torneo en el área de texto
+        StringBuilder info = new StringBuilder();
+        info.append("Nombre: ").append(torneo.getNombre()).append("\n");
+        info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
+
+        ITorneo base = torneo;
+        while (base instanceof TorneoDecorator) {
+            base = ((TorneoDecorator) base).getBase();
+        }
+        if (base instanceof TorneoFisico) {
+            info.append("Tipo: Físico\n");
+            info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
+        } else if (base instanceof TorneoVideojuegos) {
+            info.append("Tipo: Videojuego\n");
+            info.append("Videojuego: ").append(((TorneoVideojuegos) base).getVideojuego()).append("\n");
+        }
+
+        areaInfo.setText(info.toString());
+
         if (torneo.getCampeon() != null) {
             lblCampeon.setText("\uD83C\uDFC6 Campeón: " + torneo.getCampeon().getNombre());
         } else {
@@ -204,5 +236,4 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
             modeloVuelta.addElement(estado);
         }
     }
-
 }

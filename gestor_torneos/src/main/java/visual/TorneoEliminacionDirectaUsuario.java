@@ -14,6 +14,8 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
     private JLabel lblCampeon;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
+    private JTextArea areaInfo;  // Nueva variable para info
+
     private final int OFFSET_X = 220;
 
     public TorneoEliminacionDirectaUsuario(EliminacionDirectaDecorator torneo) {
@@ -21,23 +23,32 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         setLayout(null);
         setBackground(new Color(245, 255, 240));
 
+        // Área de texto con info del torneo arriba
+        areaInfo = new JTextArea();
+        areaInfo.setEditable(false);
+        areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
+        areaInfo.setBackground(new Color(240, 250, 255));
+        JScrollPane scrollInfo = new JScrollPane(areaInfo);
+        scrollInfo.setBounds(90 + OFFSET_X, 10, 380, 110);
+        add(scrollInfo);
+
         JLabel lblTitulo = new JLabel("Eliminación Directa ");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 26));
-        lblTitulo.setBounds(370 + OFFSET_X, 20, 500, 40);
+        lblTitulo.setBounds(370 + OFFSET_X, 130, 500, 40);
         add(lblTitulo);
 
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondas.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
         }
-        comboRondas.setBounds(90 + OFFSET_X, 90, 160, 32);
+        comboRondas.setBounds(90 + OFFSET_X, 180, 160, 32);
         add(comboRondas);
 
         modeloPartidos = new DefaultListModel<>();
         listaPartidos = new JList<>(modeloPartidos);
         listaPartidos.setFont(new Font("Monospaced", Font.PLAIN, 15));
         JScrollPane scrollLista = new JScrollPane(listaPartidos);
-        scrollLista.setBounds(90 + OFFSET_X, 140, 380, 350);
+        scrollLista.setBounds(90 + OFFSET_X, 220, 380, 270);
         add(scrollLista);
 
         comboRondas.addActionListener(e -> refrescarPartidos());
@@ -48,7 +59,7 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         add(lblCampeon);
 
         JButton btnVolver = new JButton("Volver");
-        btnVolver.setBounds(30 + OFFSET_X, 530, 100, 32);
+        btnVolver.setBounds(30 + OFFSET_X, 510, 100, 32);
         add(btnVolver);
 
         btnVolver.addActionListener(e -> {
@@ -79,6 +90,25 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondas.size() - 1);
         refrescarPartidos();
 
+        // Construir info del torneo para mostrar arriba
+        StringBuilder info = new StringBuilder();
+        info.append("Nombre: ").append(torneo.getNombre()).append("\n");
+        info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
+
+        ITorneo base = torneo;
+        while (base instanceof TorneoDecorator) {
+            base = ((TorneoDecorator) base).getBase();
+        }
+        if (base instanceof TorneoFisico) {
+            info.append("Tipo: Físico\n");
+            info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
+        } else if (base instanceof TorneoVideojuegos) {
+            info.append("Tipo: Videojuego\n");
+            info.append("Videojuego: ").append(((TorneoVideojuegos) base).getVideojuego()).append("\n");
+        }
+        areaInfo.setText(info.toString());
+
         if (torneo.getCampeon() != null) {
             lblCampeon.setText(" Campeón: " + torneo.getCampeon().getNombre());
         } else {
@@ -106,5 +136,4 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
             modeloPartidos.addElement(estado);
         }
     }
-
 }
