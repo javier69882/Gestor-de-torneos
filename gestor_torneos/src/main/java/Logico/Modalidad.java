@@ -1,6 +1,9 @@
 package Logico;
 
-public enum Modalidad{
+/**
+ * enum para los distintos tipos de modalidad de torneo
+ */
+public enum Modalidad {
     ELIMINACIONDIRECTA,
     DOBLEELIMINACION,
     LIGASIMPLE

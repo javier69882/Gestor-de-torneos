@@ -3,6 +3,10 @@ package visual;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @tag Usuario, Panel, Sesion
+ * Panel pequeño flotante para cambiar entre roles de usuario en la aplicación.
+ */
 public class Usuario extends JPanel {
     private JButton botonIngresarAdmin;
     private JButton botonIngresarUsuario;

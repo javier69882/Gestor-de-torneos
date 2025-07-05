@@ -9,6 +9,10 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * panel para gestionar equipos y participantes en la interfaz grafica
+ * permite crear, borrar y ver equipos y participantes
+ */
 public class Equipo extends JPanel {
     private JButton botonCrearEquipo;
     private JButton botonBorrarEquipo;
@@ -18,6 +22,9 @@ public class Equipo extends JPanel {
     private static List<Participantes> participantesCreados = new ArrayList<>();
     private static List<Equipos> equiposCreados = new ArrayList<>();
 
+    /**
+     * crea el panel con los botones y acciones para gestionar equipos y participantes
+     */
     public Equipo() {
         setLayout(null);
         setBackground(new Color(255, 255, 200));
@@ -47,7 +54,9 @@ public class Equipo extends JPanel {
         botonVerEquiposParticipantes.addActionListener(e -> abrirVentanaVerEquiposParticipantes());
     }
 
-    //FORMULARIO CREAR EQUIPO SOLO CON NOMBRE
+    /**
+     * abre una ventana para crear un equipo nuevo
+     */
     private void abrirVentanaCrearEquipo() {
         JFrame ventana = new JFrame("Crear Equipo");
         ventana.setSize(350, 180);
@@ -87,7 +96,9 @@ public class Equipo extends JPanel {
         });
     }
 
-    // BORRAR EQUIPO DESDE LISTA
+    /**
+     * abre una ventana para borrar un equipo existente
+     */
     private void abrirVentanaBorrarEquipo() {
         JFrame ventana = new JFrame("Borrar Equipo");
         ventana.setSize(400, 300);
@@ -124,7 +135,6 @@ public class Equipo extends JPanel {
             }
             String nombreEquipo = modeloLista.get(idx);
 
-            // Quitar equipo de lista global y de cada participante que lo tenga
             Equipos equipoABorrar = null;
             for (Equipos e : equiposCreados) {
                 if (e.getNombre().equals(nombreEquipo)) {
@@ -146,7 +156,9 @@ public class Equipo extends JPanel {
         });
     }
 
-    // FORMULARIO CREAR PARTICIPANTE
+    /**
+     * abre una ventana para crear un nuevo participante y asignarlo a un equipo
+     */
     private void abrirVentanaCrearParticipante() {
         JFrame ventana = new JFrame("Crear Participante");
         ventana.setSize(400, 350);
@@ -216,7 +228,9 @@ public class Equipo extends JPanel {
         });
     }
 
-    //  VENTANA DE LISTADO DE EQUIPOS Y PARTICIPANTES
+    /**
+     * abre una ventana con el listado de equipos y sus participantes
+     */
     private void abrirVentanaVerEquiposParticipantes() {
         JFrame ventana = new JFrame("Equipos y Participantes");
         ventana.setSize(500, 500);
@@ -248,7 +262,6 @@ public class Equipo extends JPanel {
             }
         }
 
-        // Participantes no asignados a ningún equipo
         boolean haySinEquipo = false;
         for (Participantes p : participantesCreados) {
             if (p.getEquipo() == null) {
@@ -268,22 +281,50 @@ public class Equipo extends JPanel {
         ventana.setVisible(true);
     }
 
-    //GETTERS
+    /**
+     * retorna la lista global de participantes creados
+     * @return lista de participantes creados
+     */
     public static List<Participantes> getParticipantesCreados() {
         return participantesCreados;
     }
+
+    /**
+     * retorna la lista global de equipos creados
+     * @return lista de equipos creados
+     */
     public static List<Equipos> getEquiposCreados() {
         return equiposCreados;
     }
+
+    /**
+     * retorna el boton de crear equipo
+     * @return boton crear equipo
+     */
     public JButton getBotonCrearEquipo() {
         return botonCrearEquipo;
     }
+
+    /**
+     * retorna el boton de borrar equipo
+     * @return boton borrar equipo
+     */
     public JButton getBotonBorrarEquipo() {
         return botonBorrarEquipo;
     }
+
+    /**
+     * retorna el boton de crear participante
+     * @return boton crear participante
+     */
     public JButton getBotonCrearParticipante() {
         return botonCrearParticipante;
     }
+
+    /**
+     * retorna el boton de ver equipos y participantes
+     * @return boton ver equipos y participantes
+     */
     public JButton getBotonVerEquiposParticipantes() {
         return botonVerEquiposParticipantes;
     }

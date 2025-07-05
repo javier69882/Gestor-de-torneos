@@ -3,13 +3,22 @@ package Logico;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * agrega la modalidad de doble eliminacion a un torneo usando el patron decorator
+ * @pattern decorator
+ */
 public class DobleEliminacionDecorator extends TorneoDecorator {
 
+    /** listas de rondas ida y vuelta */
     public final List<List<Partido>> rondasIda;
     public final List<List<Partido>> rondasVuelta;
     private int rondaActual;
     private Equipos campeon;
 
+    /**
+     * crea el decorador de doble eliminacion para un torneo
+     * @param torneo el torneo base que se va a decorar
+     */
     public DobleEliminacionDecorator(ITorneo torneo) {
         super(torneo);
         this.rondasIda = new ArrayList<>();
@@ -19,31 +28,41 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         generarPrimerasRondas();
     }
 
-    // Genera la primera ronda
+    // genera la primera ronda ida y vuelta
     private void generarPrimerasRondas() {
         List<Equipos> equipos = new ArrayList<>(torneoDecorado.getEquipos());
         int n = equipos.size();
-        // Se asume que n es 4, 8 o 16 (controlado fuera)
         List<Partido> rondaIda = new ArrayList<>();
         List<Partido> rondaVuelta = new ArrayList<>();
         for (int i = 0; i < n; i += 2) {
-            rondaIda.add(new Partido(equipos.get(i), equipos.get(i + 1)));      // ida: A vs B
-            rondaVuelta.add(new Partido(equipos.get(i + 1), equipos.get(i)));  // vuelta: B vs A
+            rondaIda.add(new Partido(equipos.get(i), equipos.get(i + 1)));
+            rondaVuelta.add(new Partido(equipos.get(i + 1), equipos.get(i)));
         }
         rondasIda.add(rondaIda);
         rondasVuelta.add(rondaVuelta);
     }
 
+    /**
+     * retorna el nombre de la modalidad
+     * @return nombre de la modalidad
+     */
     @Override
     public String getModalidad() {
         return "DOBLE_ELIMINACION";
     }
 
+    /**
+     * ejecuta la logica principal del torneo (solo muestra un mensaje aqui)
+     */
     @Override
     public void jugarTorneo() {
-        System.out.println("Jugando torneo en modalidad Eliminación Directa Ida y Vuelta.");
+        System.out.println("Jugando torneo en modalidad Eliminacion Directa Ida y Vuelta.");
     }
 
+    /**
+     * retorna la lista de todos los partidos ida y vuelta jugados en el torneo
+     * @return lista de partidos
+     */
     @Override
     public List<Partido> getPartidos() {
         List<Partido> todos = new ArrayList<>();
@@ -54,7 +73,10 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         return todos;
     }
 
-    // Devuelve partidos ida y vuelta de la ronda actual
+    /**
+     * retorna la lista de partidos de la ronda actual
+     * @return lista de partidos de la ronda actual
+     */
     public List<Partido> getPartidosRondaActual() {
         List<Partido> ronda = new ArrayList<>();
         if (rondaActual < rondasIda.size()) {
@@ -64,6 +86,12 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         return ronda;
     }
 
+    /**
+     * registra el resultado de un partido y avanza de ronda si corresponde
+     * @param partido partido a actualizar
+     * @param puntajeA puntaje del equipo A
+     * @param puntajeB puntaje del equipo B
+     */
     @Override
     public void registrarResultado(Partido partido, int puntajeA, int puntajeB) {
         if (partido.isJugado()) return;
@@ -71,7 +99,6 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         partido.setPuntajeB(puntajeB);
         partido.setJugado(true);
 
-        // Cuando TODOS los partidos ida y vuelta de la ronda actual estén jugados, avanza ronda
         boolean todosJugados = true;
         for (Partido p : rondasIda.get(rondaActual)) {
             if (!p.isJugado()) todosJugados = false;
@@ -84,6 +111,7 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         }
     }
 
+    // calcula clasificados y arma nueva ronda o define campeon
     private void avanzarRonda() {
         List<Equipos> clasificados = new ArrayList<>();
         List<Partido> rondaIda = rondasIda.get(rondaActual);
@@ -123,12 +151,18 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         }
     }
 
-    // Devuelve el campeón
+    /**
+     * retorna el campeon del torneo si ya termino, si no retorna null
+     * @return equipo campeon o null
+     */
     public Equipos getCampeon() {
         return campeon;
     }
 
-    // No aplica tabla de posiciones
+    /**
+     * no aplica tabla de posiciones en esta modalidad
+     * @return lista vacia
+     */
     @Override
     public List<PosicionLiga> getTablaPosiciones() {
         return new ArrayList<>();

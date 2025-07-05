@@ -7,6 +7,12 @@ import java.awt.*;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @pattern Decorator
+ * @tag Decorator, LigaSimple, Torneos
+ *
+ * Panel de usuario para visualizar una liga simple. Muestra tabla de posiciones y partidos.
+ */
 public class TorneoLigaSimpleUsuario extends JPanel {
     private ITorneo torneo;
     private JTable tablaPosiciones;
@@ -105,7 +111,6 @@ public class TorneoLigaSimpleUsuario extends JPanel {
             }
         });
     }
-
 
     private Object[][] getDatosTabla() {
         List<PosicionLiga> tabla = torneo.getTablaPosiciones();

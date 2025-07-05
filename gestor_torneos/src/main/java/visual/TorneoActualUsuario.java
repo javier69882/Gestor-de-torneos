@@ -4,9 +4,17 @@ import Logico.*;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * panel de vista usuario para mostrar detalles basicos de un torneo seleccionado
+ * soporta torneos decorados usando patron decorator
+ */
 public class TorneoActualUsuario extends JPanel {
     private ITorneo torneo;
 
+    /**
+     * crea el panel mostrando informacion basica del torneo seleccionado
+     * @param torneo el torneo a mostrar
+     */
     public TorneoActualUsuario(ITorneo torneo) {
         this.torneo = torneo;
         setLayout(null);
@@ -17,7 +25,7 @@ public class TorneoActualUsuario extends JPanel {
         lblTitulo.setBounds(350, 20, 700, 40);
         add(lblTitulo);
 
-        // Info básica del torneo
+        // info basica del torneo usando patron decorator
         JTextArea area = new JTextArea();
         area.setEditable(false);
         area.setFont(new Font("Monospaced", Font.PLAIN, 16));
@@ -34,7 +42,7 @@ public class TorneoActualUsuario extends JPanel {
         }
 
         if (base instanceof TorneoFisico) {
-            info.append("Tipo: Físico\n");
+            info.append("Tipo: Fisico\n");
             info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
         } else if (base instanceof TorneoVideojuegos) {
             info.append("Tipo: Videojuego\n");
@@ -46,13 +54,13 @@ public class TorneoActualUsuario extends JPanel {
         scrollInfo.setBounds(350, 70, 500, 150);
         add(scrollInfo);
 
-        // Botón Volver
+        // boton volver
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBounds(350, 260, 120, 35);
         add(btnVolver);
 
         btnVolver.addActionListener(e -> {
-            // Volver al TabletUsuario
+            // vuelve al TabletUsuario
             Container parent = this.getParent();
             while (parent != null && !(parent instanceof PanelPrincipal)) {
                 parent = parent.getParent();

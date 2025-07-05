@@ -4,13 +4,21 @@ import Logico.*;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * panel principal de la aplicacion, gestiona el estado y la vista central segun el usuario
+ * el deposito de torneos se inicializa usando singleton desde Main
+ */
 public class PanelPrincipal extends JPanel {
+    /** deposito global de torneos, se usa singleton para inicializarlo desde Main */
     public static Deposito<ITorneo> depositoTorneos = new Deposito<>();
 
     private String estadoUsuario;
     public Usuario panelUsuario;
     public JPanel panelCentral;
 
+    /**
+     * crea el panel principal con el panel de usuario y la vista central
+     */
     public PanelPrincipal() {
         setLayout(null);
         setBackground(Color.BLACK);
@@ -28,6 +36,9 @@ public class PanelPrincipal extends JPanel {
         panelUsuario.getBotonCerrarSesion().addActionListener(e -> volverABienvenida());
     }
 
+    /**
+     * muestra la vista de administrador
+     */
     private void mostrarAdmin() {
         estadoUsuario = "admin";
         remove(panelCentral);
@@ -42,6 +53,9 @@ public class PanelPrincipal extends JPanel {
         revalidate();
     }
 
+    /**
+     * muestra la vista de usuario
+     */
     private void mostrarUsuario() {
         estadoUsuario = "usuario";
         remove(panelCentral);
@@ -56,6 +70,9 @@ public class PanelPrincipal extends JPanel {
         revalidate();
     }
 
+    /**
+     * vuelve a la pantalla de bienvenida
+     */
     private void volverABienvenida() {
         estadoUsuario = null;
         remove(panelCentral);
@@ -67,6 +84,9 @@ public class PanelPrincipal extends JPanel {
         revalidate();
     }
 
+    /**
+     * muestra la vista de gestion de equipos
+     */
     private void mostrarEquipos() {
         remove(panelCentral);
         panelCentral = new Equipo();

@@ -6,6 +6,11 @@ import java.awt.*;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * panel administrador para la modalidad de doble eliminacion
+ * permite ver rondas, registrar resultados y mostrar campeon
+ * usa el patron decorator para extender la funcionalidad de torneos
+ */
 public class TorneoDobleEliminacionAdmin extends JPanel {
     private DobleEliminacionDecorator torneo;
     private JComboBox<String> comboRondas;
@@ -18,20 +23,22 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
 
     private JTextArea areaInfo;
 
+    /**
+     * crea el panel para gestionar y visualizar el torneo doble eliminacion
+     * @param torneo instancia decorada del torneo
+     */
     public TorneoDobleEliminacionAdmin(DobleEliminacionDecorator torneo) {
         this.torneo = torneo;
         setLayout(new BorderLayout());
-        setBackground(new Color(230, 255, 250)); // Igual a Eliminación Directa
+        setBackground(new Color(230, 255, 250));
 
         JLabel titulo = new JLabel("Torneo - Modalidad DOBLE_ELIMINACION", JLabel.CENTER);
         titulo.setFont(new Font("Arial", Font.BOLD, 22));
         add(titulo, BorderLayout.NORTH);
 
-        // Panel para info + resto del contenido
         JPanel panelCentral = new JPanel(null);
         add(panelCentral, BorderLayout.CENTER);
 
-        // Área de texto con info básica del torneo (scroll)
         areaInfo = new JTextArea();
         areaInfo.setEditable(false);
         areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -40,7 +47,6 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         scrollInfo.setBounds(20, 10, 1160, 110);
         panelCentral.add(scrollInfo);
 
-        // Combo de rondas
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondasIda.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
@@ -48,7 +54,6 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         comboRondas.setBounds(440, 130, 320, 36);
         panelCentral.add(comboRondas);
 
-        // Labels Ida/Vuelta
         JLabel lblIda = new JLabel("Ida:");
         lblIda.setFont(new Font("Arial", Font.BOLD, 17));
         lblIda.setBounds(350, 180, 70, 24);
@@ -59,7 +64,6 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         lblVuelta.setBounds(770, 180, 90, 24);
         panelCentral.add(lblVuelta);
 
-        // Listas de partidos
         modeloIda = new DefaultListModel<>();
         modeloVuelta = new DefaultListModel<>();
         listaIda = new JList<>(modeloIda);
@@ -76,7 +80,6 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
-        // Panel registro resultado
         JPanel panelRegistro = new JPanel(null);
         panelRegistro.setBounds(340, 440, 520, 80);
         panelRegistro.setBackground(new Color(240, 250, 255));
@@ -102,14 +105,12 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
 
         panelCentral.add(panelRegistro);
 
-        // Campeón
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 20));
         lblCampeon.setBounds(0, 530, 1200, 35);
         lblCampeon.setHorizontalAlignment(SwingConstants.CENTER);
         panelCentral.add(lblCampeon);
 
-        // Botón Volver
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBounds(40, 850, 120, 35);
         panelCentral.add(btnVolver);
@@ -153,18 +154,21 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
                     txtGolesB.setText("");
                     refrescarVista();
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(this, "Ingrese números válidos.");
+                    JOptionPane.showMessageDialog(this, "Ingrese numeros validos");
                 } catch (ValorNullException ex) {
                     JOptionPane.showMessageDialog(this, ex.getMessage());
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Seleccione un partido no jugado.");
+                JOptionPane.showMessageDialog(this, "Seleccione un partido no jugado");
             }
         });
 
         refrescarVista();
     }
 
+    /**
+     * actualiza la vista del panel, partidos, rondas y campeon
+     */
     private void refrescarVista() {
         comboRondas.removeAllItems();
         for (int i = 0; i < torneo.rondasIda.size(); i++) {
@@ -173,7 +177,6 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondasIda.size() - 1);
         refrescarPartidos();
 
-        // Actualiza la info del torneo en el área de texto
         StringBuilder info = new StringBuilder();
         info.append("Nombre: ").append(torneo.getNombre()).append("\n");
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
@@ -184,7 +187,7 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
             base = ((TorneoDecorator) base).getBase();
         }
         if (base instanceof TorneoFisico) {
-            info.append("Tipo: Físico\n");
+            info.append("Tipo: Fisico\n");
             info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
         } else if (base instanceof TorneoVideojuegos) {
             info.append("Tipo: Videojuego\n");
@@ -194,12 +197,15 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         areaInfo.setText(info.toString());
 
         if (torneo.getCampeon() != null) {
-            lblCampeon.setText("\uD83C\uDFC6 Campeón: " + torneo.getCampeon().getNombre());
+            lblCampeon.setText("\uD83C\uDFC6 Campeon: " + torneo.getCampeon().getNombre());
         } else {
             lblCampeon.setText("");
         }
     }
 
+    /**
+     * refresca la lista de partidos mostrados segun ronda seleccionada
+     */
     private void refrescarPartidos() {
         int ronda = comboRondas.getSelectedIndex();
         if (ronda < 0) return;

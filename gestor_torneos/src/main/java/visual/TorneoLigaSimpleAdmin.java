@@ -7,6 +7,13 @@ import java.awt.*;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * @pattern Decorator
+ * @tag Decorator, LigaSimple, Torneos
+ *
+ * Panel administrador para visualizar y gestionar un torneo en modalidad Liga Simple.
+ * Permite ver partidos, registrar resultados y mostrar la tabla de posiciones.
+ */
 public class TorneoLigaSimpleAdmin extends JPanel {
     private ITorneo torneo;
     private JList<String> listaPartidos;
@@ -15,20 +22,19 @@ public class TorneoLigaSimpleAdmin extends JPanel {
     private JButton btnRegistrar;
     private JTextField txtGolesA, txtGolesB;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-
     private JTextArea areaInfo;
 
     public TorneoLigaSimpleAdmin(ITorneo torneo) {
         this.torneo = torneo;
         setLayout(new BorderLayout());
 
-        // Área de texto con info del torneo arriba
+        // Información general del torneo
         areaInfo = new JTextArea();
         areaInfo.setEditable(false);
         areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
         areaInfo.setBackground(new Color(240, 250, 255));
         JScrollPane scrollInfo = new JScrollPane(areaInfo);
-        scrollInfo.setPreferredSize(new Dimension(0, 110)); // altura fija
+        scrollInfo.setPreferredSize(new Dimension(0, 110));
         add(scrollInfo, BorderLayout.NORTH);
 
         JLabel titulo = new JLabel("Torneo - Modalidad LIGA_SIMPLE", JLabel.CENTER);
@@ -43,6 +49,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         splitPane.setDividerLocation(250);
 
+        // Lista de partidos
         modeloPartidos = new DefaultListModel<>();
         for (Partido p : torneo.getPartidos()) {
             String texto;
@@ -65,13 +72,14 @@ public class TorneoLigaSimpleAdmin extends JPanel {
 
         JPanel panelDerecho = new JPanel(new BorderLayout());
 
+        // Tabla de posiciones
         tablaPosiciones = new JTable(getDatosTabla(), new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"});
         JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
         panelDerecho.add(scrollTabla, BorderLayout.CENTER);
 
+        // Panel para registrar resultado de un partido
         JPanel panelRegistro = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panelRegistro.setPreferredSize(new Dimension(500, 80));
-
         panelRegistro.add(new JLabel("Goles Equipo A:"));
         txtGolesA = new JTextField(2);
         panelRegistro.add(txtGolesA);
@@ -129,7 +137,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         actualizarVista();
     }
 
-
+    // Obtiene la matriz de datos para la tabla de posiciones
     private Object[][] getDatosTabla() {
         List<PosicionLiga> tabla = torneo.getTablaPosiciones();
         Object[][] datos = new Object[tabla.size()][5];
@@ -144,6 +152,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         return datos;
     }
 
+    // Actualiza la vista después de registrar un resultado
     private void actualizarVista() {
         modeloPartidos.clear();
         for (Partido p : torneo.getPartidos()) {
@@ -165,7 +174,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
                 new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLE FAVOR", "GOLES CONTRA"}));
         repaint();
 
-        // Actualizar info del torneo en el área de texto
+        // Información del torneo
         StringBuilder info = new StringBuilder();
         info.append("Nombre: ").append(torneo.getNombre()).append("\n");
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");

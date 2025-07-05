@@ -4,9 +4,17 @@ import Logico.*;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * panel de vista admin para mostrar informacion de un torneo seleccionado
+ * soporta torneos decorados usando patron decorator
+ */
 public class TorneoActualAdmin extends JPanel {
     private ITorneo torneo;
 
+    /**
+     * crea el panel mostrando informacion basica del torneo seleccionado
+     * @param torneo el torneo a mostrar
+     */
     public TorneoActualAdmin(ITorneo torneo) {
         this.torneo = torneo;
         setLayout(null);
@@ -26,14 +34,14 @@ public class TorneoActualAdmin extends JPanel {
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
         info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
 
-        // ver si el torneo base es físico o videojuego
+        // muestra datos base segun tipo usando patron decorator
         ITorneo base = torneo;
         while (base instanceof TorneoDecorator) {
             base = ((TorneoDecorator) base).getBase();
         }
 
         if (base instanceof TorneoFisico) {
-            info.append("Tipo: Físico\n");
+            info.append("Tipo: Fisico\n");
             info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
         } else if (base instanceof TorneoVideojuegos) {
             info.append("Tipo: Videojuego\n");
@@ -55,7 +63,7 @@ public class TorneoActualAdmin extends JPanel {
         add(btnVolver);
 
         btnVolver.addActionListener(e -> {
-            // Volver al panel principal admin
+            // vuelve al panel principal admin
             Container parent = this.getParent();
             while (parent != null && !(parent instanceof PanelPrincipal)) {
                 parent = parent.getParent();

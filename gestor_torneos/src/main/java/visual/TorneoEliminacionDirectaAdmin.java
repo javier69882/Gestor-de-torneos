@@ -6,6 +6,11 @@ import java.awt.*;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * panel de administración para torneos de eliminación directa
+ * permite ver, registrar resultados y visualizar el bracket de rondas
+ * usa el patron decorator para extender la funcionalidad del torneo base
+ */
 public class TorneoEliminacionDirectaAdmin extends JPanel {
     private EliminacionDirectaDecorator torneo;
     private JComboBox<String> comboRondas;
@@ -18,12 +23,16 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
 
     private JTextArea areaInfo;
 
+    /**
+     * crea el panel de administración para torneo de eliminación directa
+     * @param torneo decorador de eliminación directa (patron decorator)
+     */
     public TorneoEliminacionDirectaAdmin(EliminacionDirectaDecorator torneo) {
         this.torneo = torneo;
         setLayout(null);
-        setBackground(new Color(230, 255, 250)); // Más suave
+        setBackground(new Color(230, 255, 250));
 
-        // Área de texto con info del torneo
+        // área de texto con info del torneo
         areaInfo = new JTextArea();
         areaInfo.setEditable(false);
         areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -32,34 +41,34 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         scrollInfo.setBounds(240, 10, 720, 110);
         add(scrollInfo);
 
-        // Título centrado
-        JLabel lblTitulo = new JLabel("Eliminación Directa - ADMIN");
+        // título
+        JLabel lblTitulo = new JLabel("Eliminacion Directa - ADMIN");
         lblTitulo.setFont(new Font("Arial", Font.BOLD, 28));
         lblTitulo.setBounds(0, 130, 1200, 40);
         lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblTitulo);
 
-        // Combo de rondas
+        // combo de rondas
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondas.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
         }
-        comboRondas.setBounds(440, 180, 320, 36); // Centrado
+        comboRondas.setBounds(440, 180, 320, 36);
         add(comboRondas);
 
-        // Lista de partidos
+        // lista de partidos
         modeloPartidos = new DefaultListModel<>();
         listaPartidos = new JList<>(modeloPartidos);
         listaPartidos.setFont(new Font("Monospaced", Font.PLAIN, 20));
         JScrollPane scrollLista = new JScrollPane(listaPartidos);
-        scrollLista.setBounds(240, 220, 720, 260); // Centrado y más alto
+        scrollLista.setBounds(240, 220, 720, 260);
         add(scrollLista);
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
-        // Panel registro resultado,
+        // panel para registrar resultado de partido
         JPanel panelRegistro = new JPanel(null);
-        panelRegistro.setBounds(340, 500, 520, 80); // Bien debajo de la lista y centrado
+        panelRegistro.setBounds(340, 500, 520, 80);
         panelRegistro.setBackground(new Color(240, 250, 255));
         panelRegistro.setBorder(BorderFactory.createTitledBorder("Registrar Resultado"));
 
@@ -83,14 +92,14 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
 
         add(panelRegistro);
 
-        // Campeón, abajo centrado
+        // campeón
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 20));
         lblCampeon.setBounds(0, 600, 1200, 35);
         lblCampeon.setHorizontalAlignment(SwingConstants.CENTER);
         add(lblCampeon);
 
-        // Botón Volver, bien abajo a la izquierda
+        // botón volver
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBounds(40, 850, 120, 35);
         add(btnVolver);
@@ -125,7 +134,7 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
                         txtGolesB.setText("");
                         refrescarBracket();
                     } catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(this, "Ingrese números válidos.");
+                        JOptionPane.showMessageDialog(this, "Ingrese numeros validos.");
                     } catch (ValorNullException ex) {
                         JOptionPane.showMessageDialog(this, ex.getMessage());
                     }
@@ -138,6 +147,9 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         refrescarBracket();
     }
 
+    /**
+     * actualiza info, rondas y campeón en la interfaz
+     */
     private void refrescarBracket() {
         comboRondas.removeAllItems();
         for (int i = 0; i < torneo.rondas.size(); i++) {
@@ -146,7 +158,6 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondas.size() - 1);
         refrescarPartidos();
 
-        // Mostrar info del torneo arriba
         StringBuilder info = new StringBuilder();
         info.append("Nombre: ").append(torneo.getNombre()).append("\n");
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
@@ -157,7 +168,7 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
             base = ((TorneoDecorator) base).getBase();
         }
         if (base instanceof TorneoFisico) {
-            info.append("Tipo: Físico\n");
+            info.append("Tipo: Fisico\n");
             info.append("Deporte: ").append(((TorneoFisico) base).getDeporte()).append("\n");
         } else if (base instanceof TorneoVideojuegos) {
             info.append("Tipo: Videojuego\n");
@@ -167,12 +178,15 @@ public class TorneoEliminacionDirectaAdmin extends JPanel {
         areaInfo.setText(info.toString());
 
         if (torneo.getCampeon() != null) {
-            lblCampeon.setText("Campeón: " + torneo.getCampeon().getNombre());
+            lblCampeon.setText("Campeon: " + torneo.getCampeon().getNombre());
         } else {
             lblCampeon.setText("");
         }
     }
 
+    /**
+     * actualiza la lista de partidos segun ronda seleccionada
+     */
     private void refrescarPartidos() {
         int ronda = comboRondas.getSelectedIndex();
         if (ronda < 0) return;

@@ -3,7 +3,13 @@ package visual;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * panel de bienvenida que muestra un mensaje inicial en la aplicacion
+ */
 public class Bienvenida extends JPanel {
+    /**
+     * crea el panel de bienvenida con mensaje y fondo
+     */
     public Bienvenida() {
         setBackground(new Color(60, 150, 200));
         setLayout(null);

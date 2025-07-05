@@ -6,6 +6,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * panel para administracion, permite crear y acceder a torneos
+ * al crear torneos se usa el patron decorator para agregar modalidad
+ * @pattern decorator
+ */
 public class PizarraAdmin extends JPanel {
     private Image fondo;
     private JButton botonCrearTorneo;
@@ -13,6 +18,9 @@ public class PizarraAdmin extends JPanel {
     private JButton botonEquipos;
     private JButton botonInformacion;
 
+    /**
+     * crea el panel de administracion con sus botones principales
+     */
     public PizarraAdmin() {
         setPreferredSize(new Dimension(1000, 1000));
         setLayout(null);
@@ -39,10 +47,17 @@ public class PizarraAdmin extends JPanel {
         botonAccederTorneo.addActionListener(e -> abrirVentanaAccederTorneo());
     }
 
+    /**
+     * retorna el boton para gestionar equipos
+     * @return boton equipos
+     */
     public JButton getBotonEquipos() {
         return botonEquipos;
     }
 
+    /**
+     * abre la ventana para crear un nuevo torneo usando patron decorator
+     */
     private void abrirVentanaCrearTorneo() {
         JFrame ventana = new JFrame("Crear Nuevo Torneo");
         ventana.setSize(600, 650);
@@ -80,7 +95,6 @@ public class PizarraAdmin extends JPanel {
         JLabel lblEquipos = new JLabel("Equipos participantes:");
         lblEquipos.setBounds(30, 220, 180, 25);
 
-        // Checkboxes para equipos
         JPanel panelChecks = new JPanel();
         panelChecks.setLayout(new GridLayout(0, 1));
         JScrollPane scrollChecks = new JScrollPane(panelChecks);
@@ -123,7 +137,6 @@ public class PizarraAdmin extends JPanel {
             Modalidad modalidad = (Modalidad) comboModalidad.getSelectedItem();
             CantidadEquipos cantidad = (CantidadEquipos) comboCantidadEquipos.getSelectedItem();
 
-            // Contar seleccionados
             List<Equipos> equiposSeleccionados = new ArrayList<>();
             for (int i = 0; i < checkBoxes.size(); i++) {
                 if (checkBoxes.get(i).isSelected()) {
@@ -145,7 +158,7 @@ public class PizarraAdmin extends JPanel {
                 return;
             }
 
-            // Cambios Decorator aquí
+            // uso de patron decorator
             ITorneo torneoBase;
             if (comboTipo.getSelectedIndex() == 0) {
                 torneoBase = new TorneoFisico(nombre, equiposSeleccionados, cantidad, deporteVideojuego);
@@ -174,8 +187,10 @@ public class PizarraAdmin extends JPanel {
         });
     }
 
+    /**
+     * abre la ventana para acceder a un torneo existente
+     */
     private void abrirVentanaAccederTorneo() {
-        // Referencia al PanelPrincipal
         Container parent = this.getParent();
         while (parent != null && !(parent instanceof PanelPrincipal)) {
             parent = parent.getParent();
@@ -223,7 +238,6 @@ public class PizarraAdmin extends JPanel {
             ITorneo seleccionado = torneos.get(idx);
             ventana.dispose();
 
-            // Cambia el panel central según el tipo/modalidad
             panelPrincipal.remove(panelPrincipal.panelCentral);
 
             if (seleccionado instanceof EliminacionDirectaDecorator) {
@@ -247,9 +261,10 @@ public class PizarraAdmin extends JPanel {
         ventana.setVisible(true);
     }
 
-
-
-
+    /**
+     * pinta el fondo de pizarra
+     * @param g contexto grafico
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

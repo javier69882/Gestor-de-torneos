@@ -6,6 +6,14 @@ import java.awt.*;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Panel de visualización de torneos en modalidad Eliminación Directa (vista usuario).
+ * Permite consultar el bracket, rondas y el campeón del torneo.
+ * <p>
+ * <b>Patrón de diseño:</b> Decorator.<br>
+ * Esta clase utiliza una instancia de {@link EliminacionDirectaDecorator}
+ * para extender dinámicamente la funcionalidad de un torneo base sin modificar su código.
+ */
 public class TorneoEliminacionDirectaUsuario extends JPanel {
     private EliminacionDirectaDecorator torneo;
     private JComboBox<String> comboRondas;
@@ -14,16 +22,20 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
     private JLabel lblCampeon;
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    private JTextArea areaInfo;  // Nueva variable para info
+    private JTextArea areaInfo;  // Muestra información básica del torneo
 
     private final int OFFSET_X = 220;
 
+    /**
+     * Construye la vista de usuario para un torneo de eliminación directa decorado.
+     * @param torneo Instancia decorada de {@link EliminacionDirectaDecorator} (Decorator Pattern)
+     */
     public TorneoEliminacionDirectaUsuario(EliminacionDirectaDecorator torneo) {
         this.torneo = torneo;
         setLayout(null);
         setBackground(new Color(245, 255, 240));
 
-        // Área de texto con info del torneo arriba
+        // Panel informativo superior
         areaInfo = new JTextArea();
         areaInfo.setEditable(false);
         areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
@@ -37,6 +49,7 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         lblTitulo.setBounds(370 + OFFSET_X, 130, 500, 40);
         add(lblTitulo);
 
+        // Combo de rondas (permite navegar el bracket)
         comboRondas = new JComboBox<>();
         for (int i = 0; i < torneo.rondas.size(); i++) {
             comboRondas.addItem("Ronda " + (i + 1));
@@ -44,6 +57,7 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         comboRondas.setBounds(90 + OFFSET_X, 180, 160, 32);
         add(comboRondas);
 
+        // Lista de partidos de la ronda seleccionada
         modeloPartidos = new DefaultListModel<>();
         listaPartidos = new JList<>(modeloPartidos);
         listaPartidos.setFont(new Font("Monospaced", Font.PLAIN, 15));
@@ -53,11 +67,13 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
 
         comboRondas.addActionListener(e -> refrescarPartidos());
 
+        // Campeón del torneo (si ya hay uno)
         lblCampeon = new JLabel();
         lblCampeon.setFont(new Font("Arial", Font.BOLD, 22));
         lblCampeon.setBounds(450 + OFFSET_X, 300, 400, 40);
         add(lblCampeon);
 
+        // Botón para volver a la pantalla principal del usuario
         JButton btnVolver = new JButton("Volver");
         btnVolver.setBounds(30 + OFFSET_X, 510, 100, 32);
         add(btnVolver);
@@ -82,6 +98,9 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         refrescarVista();
     }
 
+    /**
+     * Actualiza la info del torneo, rondas y campeón en la interfaz.
+     */
     private void refrescarVista() {
         comboRondas.removeAllItems();
         for (int i = 0; i < torneo.rondas.size(); i++) {
@@ -90,7 +109,7 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         comboRondas.setSelectedIndex(torneo.rondas.size() - 1);
         refrescarPartidos();
 
-        // Construir info del torneo para mostrar arriba
+        // Info del torneo
         StringBuilder info = new StringBuilder();
         info.append("Nombre: ").append(torneo.getNombre()).append("\n");
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
@@ -110,12 +129,15 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         areaInfo.setText(info.toString());
 
         if (torneo.getCampeon() != null) {
-            lblCampeon.setText(" Campeón: " + torneo.getCampeon().getNombre());
+            lblCampeon.setText("Campeón: " + torneo.getCampeon().getNombre());
         } else {
             lblCampeon.setText("");
         }
     }
 
+    /**
+     * Refresca la lista de partidos según la ronda seleccionada.
+     */
     private void refrescarPartidos() {
         int ronda = comboRondas.getSelectedIndex();
         if (ronda < 0) return;

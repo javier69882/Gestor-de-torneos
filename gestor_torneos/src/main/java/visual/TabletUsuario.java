@@ -4,10 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import Logico.*;
 
+/**
+ * panel de vista usuario, permite ver equipos y torneos disponibles
+ */
 public class TabletUsuario extends JPanel {
     private JButton botonVerEquipos;
     private JButton botonVerTorneos;
 
+    /**
+     * crea el panel de usuario con botones para ver equipos y torneos
+     */
     public TabletUsuario() {
         setBackground(new Color(180, 240, 200));
         setLayout(null);
@@ -26,18 +32,21 @@ public class TabletUsuario extends JPanel {
         botonVerTorneos.setBounds(350, 240, 200, 40);
         add(botonVerTorneos);
 
-        // Listener para abrir el panel de torneos
+        // listener para abrir panel de torneos
         botonVerTorneos.addActionListener(e -> abrirPanelVerTorneos());
     }
 
+    /**
+     * abre la ventana para seleccionar y ver torneos disponibles
+     */
     private void abrirPanelVerTorneos() {
-        // Referencia al PanelPrincipal
+        // referencia al PanelPrincipal
         Container parent = this.getParent();
         while (parent != null && !(parent instanceof PanelPrincipal)) {
             parent = parent.getParent();
         }
         if (!(parent instanceof PanelPrincipal)) {
-            JOptionPane.showMessageDialog(this, "No se pudo encontrar el panel principal.");
+            JOptionPane.showMessageDialog(this, "No se pudo encontrar el panel principal");
             return;
         }
         PanelPrincipal panelPrincipal = (PanelPrincipal) parent;
@@ -73,13 +82,13 @@ public class TabletUsuario extends JPanel {
         btnVer.addActionListener(ev -> {
             int idx = listaTorneos.getSelectedIndex();
             if (idx < 0) {
-                JOptionPane.showMessageDialog(ventana, "Selecciona un torneo.");
+                JOptionPane.showMessageDialog(ventana, "Selecciona un torneo");
                 return;
             }
             ITorneo seleccionado = torneos.get(idx);
             ventana.dispose();
 
-            // Cambia el panel central en PanelPrincipal según modalidad
+            // cambia el panel central en PanelPrincipal segun modalidad
             panelPrincipal.remove(panelPrincipal.panelCentral);
 
             if (seleccionado instanceof EliminacionDirectaDecorator) {
@@ -102,11 +111,16 @@ public class TabletUsuario extends JPanel {
         ventana.setVisible(true);
     }
 
-
+    /**
+     * retorna el boton para ver equipos
+     */
     public JButton getBotonVerEquipos() {
         return botonVerEquipos;
     }
 
+    /**
+     * retorna el boton para ver torneos
+     */
     public JButton getBotonVerTorneos() {
         return botonVerTorneos;
     }
