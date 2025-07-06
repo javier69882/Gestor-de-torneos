@@ -1,5 +1,5 @@
 package visual;
-
+import Logico.SingletonDatosPrueba;
 import Logico.Equipos;
 import Logico.Participantes;
 import Logico.ValorNullException;
@@ -26,6 +26,15 @@ public class Equipo extends JPanel {
      * crea el panel con los botones y acciones para gestionar equipos y participantes
      */
     public Equipo() {
+
+       //datos del singleton de prueba
+        if (equiposCreados.isEmpty()) {
+            equiposCreados.addAll(SingletonDatosPrueba.getInstancia().getEquiposCreados());
+        }
+        if (participantesCreados.isEmpty()) {
+            participantesCreados.addAll(SingletonDatosPrueba.getInstancia().getParticipantesCreados());
+        }
+
         setLayout(null);
         setBackground(new Color(255, 255, 200));
 
