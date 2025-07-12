@@ -44,7 +44,7 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
         areaInfo.setBackground(new Color(240, 250, 255));
         JScrollPane scrollInfo = new JScrollPane(areaInfo);
-        scrollInfo.setBounds(20, 10, 1160, 110);
+        scrollInfo.setBounds(240, 10, 720, 110);
         panelCentral.add(scrollInfo);
 
         comboRondas = new JComboBox<>();

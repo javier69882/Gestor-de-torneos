@@ -28,26 +28,34 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         this.torneo = torneo;
         setLayout(new BorderLayout());
 
-        // Información general del torneo
+        // Información general del torneo y título
+        JPanel panelSuperior = new JPanel(null);
+        panelSuperior.setPreferredSize(new Dimension(1200, 150));
+        add(panelSuperior, BorderLayout.NORTH);
+
+        JLabel titulo = new JLabel("Torneo - Modalidad LIGA_SIMPLE", JLabel.CENTER);
+        titulo.setFont(new Font("Arial", Font.BOLD, 22));
+        titulo.setBounds(240, 5, 720, 30);
+        panelSuperior.add(titulo);
+
         areaInfo = new JTextArea();
         areaInfo.setEditable(false);
         areaInfo.setFont(new Font("Monospaced", Font.PLAIN, 14));
         areaInfo.setBackground(new Color(240, 250, 255));
+
         JScrollPane scrollInfo = new JScrollPane(areaInfo);
-        scrollInfo.setPreferredSize(new Dimension(0, 110));
-        add(scrollInfo, BorderLayout.NORTH);
+        scrollInfo.setBounds(240, 40, 720, 100);
+        panelSuperior.add(scrollInfo);
 
-        JLabel titulo = new JLabel("Torneo - Modalidad LIGA_SIMPLE", JLabel.CENTER);
-        titulo.setFont(new Font("Arial", Font.BOLD, 22));
-        JPanel panelTitulo = new JPanel(new BorderLayout());
-        panelTitulo.add(titulo, BorderLayout.CENTER);
-        add(panelTitulo, BorderLayout.CENTER);
-
-        JPanel panelPrincipal = new JPanel(new BorderLayout());
-        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(0, 250, 0, 0));
+        // Panel inferior delimitado
+        JPanel panelInferior = new JPanel(null);
+        panelInferior.setBounds(10, 110, 1200, 500);
+        add(panelInferior);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        splitPane.setDividerLocation(250);
+        splitPane.setBounds(160, 70, 1100, 500);
+        splitPane.setDividerLocation(300);
+        splitPane.setResizeWeight(0.3);
 
         // Lista de partidos
         modeloPartidos = new DefaultListModel<>();
@@ -75,7 +83,9 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         // Tabla de posiciones
         tablaPosiciones = new JTable(getDatosTabla(), new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"});
         JScrollPane scrollTabla = new JScrollPane(tablaPosiciones);
-        panelDerecho.add(scrollTabla, BorderLayout.CENTER);
+        JPanel panelTablaCentrada = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelTablaCentrada.add(scrollTabla);
+        panelDerecho.add(panelTablaCentrada, BorderLayout.CENTER);
 
         // Panel para registrar resultado de un partido
         JPanel panelRegistro = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -131,8 +141,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
 
         panelDerecho.add(panelRegistro, BorderLayout.SOUTH);
         splitPane.setRightComponent(panelDerecho);
-        panelPrincipal.add(splitPane, BorderLayout.CENTER);
-        add(panelPrincipal, BorderLayout.SOUTH);
+        panelInferior.add(splitPane);
 
         actualizarVista();
     }
@@ -171,7 +180,7 @@ public class TorneoLigaSimpleAdmin extends JPanel {
         }
 
         tablaPosiciones.setModel(new DefaultTableModel(getDatosTabla(),
-                new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLE FAVOR", "GOLES CONTRA"}));
+                new String[]{"Equipo", "PUNTOS", "JUGADOS", "GOLES FAVOR", "GOLES CONTRA"}));
         repaint();
 
         // Información del torneo
