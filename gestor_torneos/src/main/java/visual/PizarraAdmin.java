@@ -16,7 +16,6 @@ public class PizarraAdmin extends JPanel {
     private JButton botonCrearTorneo;
     private JButton botonAccederTorneo;
     private JButton botonEquipos;
-    private JButton botonInformacion;
 
     /**
      * crea el panel de administracion con sus botones principales
@@ -31,17 +30,14 @@ public class PizarraAdmin extends JPanel {
         botonCrearTorneo = new JButton("Crear Torneo");
         botonAccederTorneo = new JButton("Acceder Torneo");
         botonEquipos = new JButton("Gestionar Equipos");
-        botonInformacion = new JButton("Ver Información");
 
         botonCrearTorneo.setBounds(80, 300, 150, 30);
         botonAccederTorneo.setBounds(80, 350, 150, 30);
         botonEquipos.setBounds((800 - 150) / 2, 700, 150, 30);
-        botonInformacion.setBounds(570, 340, 150, 30);
 
         add(botonCrearTorneo);
         add(botonAccederTorneo);
         add(botonEquipos);
-        add(botonInformacion);
 
         botonCrearTorneo.addActionListener(e -> abrirVentanaCrearTorneo());
         botonAccederTorneo.addActionListener(e -> abrirVentanaAccederTorneo());
