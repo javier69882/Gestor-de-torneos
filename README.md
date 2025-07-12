@@ -23,7 +23,7 @@ En el repositorio estará disponible
 -Diagrama de clases UML
 -Diagrama de casos de uso
 -El proyecto claramente
--Video de como se ve nuestra interfaz
+-Video de como se ve nuestra interfaz https://youtu.be/lHbMbK5ZVy4
 
 Patrones de diseño
 
