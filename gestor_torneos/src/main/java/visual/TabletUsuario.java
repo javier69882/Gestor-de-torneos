@@ -18,7 +18,7 @@ public class TabletUsuario extends JPanel {
         setBackground(new Color(180, 240, 200));
         setLayout(null);
 
-        JLabel label = new JLabel("Vista de Usuario");
+        JLabel label = new JLabel("Usuario");
         label.setFont(new Font("Arial", Font.BOLD, 28));
         label.setForeground(Color.BLACK);
         label.setBounds(350, 60, 400, 50);

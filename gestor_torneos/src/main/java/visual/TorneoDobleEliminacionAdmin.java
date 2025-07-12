@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.List;
 import java.time.format.DateTimeFormatter;
 
+
 /**
  * panel administrador para la modalidad de doble eliminacion
  * permite ver rondas, registrar resultados y mostrar campeon
@@ -180,6 +181,7 @@ public class TorneoDobleEliminacionAdmin extends JPanel {
         StringBuilder info = new StringBuilder();
         info.append("Nombre: ").append(torneo.getNombre()).append("\n");
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Fecha de creacion:").append(torneo.getFechaCreacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
         info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
 
         ITorneo base = torneo;

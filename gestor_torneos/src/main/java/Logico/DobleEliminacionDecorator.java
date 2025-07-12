@@ -1,7 +1,10 @@
 package Logico;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
+
 
 /**
  * agrega la modalidad de doble eliminacion a un torneo usando el patron decorator
@@ -15,6 +18,7 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
     private int rondaActual;
     private Equipos campeon;
 
+
     /**
      * crea el decorador de doble eliminacion para un torneo
      * @param torneo el torneo base que se va a decorar
@@ -25,6 +29,7 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
         this.rondasVuelta = new ArrayList<>();
         this.rondaActual = 0;
         this.campeon = null;
+
         generarPrimerasRondas();
     }
 
@@ -157,6 +162,15 @@ public class DobleEliminacionDecorator extends TorneoDecorator {
      */
     public Equipos getCampeon() {
         return campeon;
+    }
+
+    /**
+     * retorna la fecha de creacion del torneo
+     * @return fecha de creacion
+     */
+
+    public LocalDateTime getFechaCreacion() {
+        return torneoDecorado.getFechaCreacion();//
     }
 
     /**

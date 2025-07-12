@@ -38,7 +38,7 @@ public class SingletonDatosPrueba {
 
     // inicializa equipos, participantes y torneos de prueba
     private void inicializarDatosPrueba() {
-        // --- Equipos para cada caso ---
+        // Equipos para cada caso
         List<Equipos> equipos4 = crearEquipos("E4_", 4);
         List<Equipos> equipos8 = crearEquipos("E8_", 8);
         List<Equipos> equipos16 = crearEquipos("E16_", 16);
@@ -48,7 +48,7 @@ public class SingletonDatosPrueba {
         equiposCreados.addAll(equipos8);
         equiposCreados.addAll(equipos16);
 
-        // --- Torneos de 4 equipos ---
+        // Torneos de 4 equipos
         ITorneo fisicoBase4 = new TorneoFisico("Fisico ED 4", equipos4, CantidadEquipos.CUATRO, "Futbol");
         ITorneo fisicoBase4_2 = new TorneoFisico("Fisico DE 4", equipos4, CantidadEquipos.CUATRO, "Basquet");
         ITorneo fisicoBase4_3 = new TorneoFisico("Fisico LS 4", equipos4, CantidadEquipos.CUATRO, "Voleibol");
@@ -56,7 +56,7 @@ public class SingletonDatosPrueba {
         ITorneo videojuegoBase4_2 = new TorneoVideojuegos("Videojuego DE 4", equipos4, CantidadEquipos.CUATRO, "NBA 2K");
         ITorneo videojuegoBase4_3 = new TorneoVideojuegos("Videojuego LS 4", equipos4, CantidadEquipos.CUATRO, "Rocket League");
 
-        // --- Torneos de 8 equipos ---
+        // Torneos de 8 equipos
         ITorneo fisicoBase8 = new TorneoFisico("Fisico ED 8", equipos8, CantidadEquipos.OCHO, "Futbol");
         ITorneo fisicoBase8_2 = new TorneoFisico("Fisico DE 8", equipos8, CantidadEquipos.OCHO, "Basquet");
         ITorneo fisicoBase8_3 = new TorneoFisico("Fisico LS 8", equipos8, CantidadEquipos.OCHO, "Voleibol");
@@ -64,7 +64,7 @@ public class SingletonDatosPrueba {
         ITorneo videojuegoBase8_2 = new TorneoVideojuegos("Videojuego DE 8", equipos8, CantidadEquipos.OCHO, "NBA 2K");
         ITorneo videojuegoBase8_3 = new TorneoVideojuegos("Videojuego LS 8", equipos8, CantidadEquipos.OCHO, "Rocket League");
 
-        // --- Torneos de 16 equipos ---
+        //  Torneos de 16 equipos
         ITorneo fisicoBase16 = new TorneoFisico("Fisico ED 16", equipos16, CantidadEquipos.DIESEIS, "Futbol");
         ITorneo fisicoBase16_2 = new TorneoFisico("Fisico DE 16", equipos16, CantidadEquipos.DIESEIS, "Basquet");
         ITorneo fisicoBase16_3 = new TorneoFisico("Fisico LS 16", equipos16, CantidadEquipos.DIESEIS, "Voleibol");
@@ -72,7 +72,7 @@ public class SingletonDatosPrueba {
         ITorneo videojuegoBase16_2 = new TorneoVideojuegos("Videojuego DE 16", equipos16, CantidadEquipos.DIESEIS, "NBA 2K");
         ITorneo videojuegoBase16_3 = new TorneoVideojuegos("Videojuego LS 16", equipos16, CantidadEquipos.DIESEIS, "Rocket League");
 
-        // --- Decoradores: para cada base crea los 3 tipos de torneo ---
+        // Decoradores: para cada base crea los 3 tipos de torneo
         agregarTorneosDecorados(fisicoBase4, fisicoBase4_2, fisicoBase4_3);
         agregarTorneosDecorados(videojuegoBase4, videojuegoBase4_2, videojuegoBase4_3);
 

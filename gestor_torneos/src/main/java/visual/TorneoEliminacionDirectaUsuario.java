@@ -113,6 +113,7 @@ public class TorneoEliminacionDirectaUsuario extends JPanel {
         StringBuilder info = new StringBuilder();
         info.append("Nombre: ").append(torneo.getNombre()).append("\n");
         info.append("Modalidad: ").append(torneo.getModalidad()).append("\n");
+        info.append("Fecha de creacion:").append(torneo.getFechaCreacion().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
         info.append("Cantidad equipos: ").append(torneo.getCantidadEquipos()).append("\n");
 
         ITorneo base = torneo;

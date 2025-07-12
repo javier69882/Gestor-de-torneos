@@ -2,6 +2,7 @@ package Logico;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.time.LocalDateTime;
 
 /**
  * implementacion base de torneo, no tiene modalidad ni comportamiento especial
@@ -12,6 +13,7 @@ public class TorneoBase implements ITorneo {
     protected String nombre;
     protected List<Equipos> equipos;
     protected CantidadEquipos cantidadEquipos;
+    private LocalDateTime fechaCreacion;
 
     /**
      * crea un torneo base con nombre, equipos y cantidad de equipos
@@ -23,6 +25,7 @@ public class TorneoBase implements ITorneo {
         this.nombre = nombre;
         this.equipos = equipos;
         this.cantidadEquipos = cantidadEquipos;
+        this.fechaCreacion = LocalDateTime.now();
     }
 
     /**
@@ -47,6 +50,11 @@ public class TorneoBase implements ITorneo {
      * retorna la cantidad de equipos permitidos
      * @return cantidad de equipos
      */
+
+    public LocalDateTime getFechaCreacionTorneo() {
+        return fechaCreacion;
+    }
+
     @Override
     public CantidadEquipos getCantidadEquipos() {
         return cantidadEquipos;
@@ -105,5 +113,13 @@ public class TorneoBase implements ITorneo {
     @Override
     public List<PosicionLiga> getTablaPosiciones() {
         return new ArrayList<>();
+    }
+    /**
+     * retorna la fecha de creacion del torneo
+     * @return fecha de creacion
+     */
+    @Override
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
     }
 }

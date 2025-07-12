@@ -1,5 +1,6 @@
 package Logico;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -56,6 +57,9 @@ public interface ITorneo {
      * @param puntajeB puntaje del equipo B
      */
     void registrarResultado(Partido partido, int puntajeA, int puntajeB);
+
+    public LocalDateTime getFechaCreacion();
+
 
     /**
      * retorna la tabla de posiciones si aplica

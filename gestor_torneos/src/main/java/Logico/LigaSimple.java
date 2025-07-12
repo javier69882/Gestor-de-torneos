@@ -1,5 +1,6 @@
 package Logico;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,5 +117,9 @@ public class LigaSimple extends TorneoDecorator {
     @Override
     public void jugarTorneo() {
 
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return torneoDecorado.getFechaCreacion();//
     }
 }
